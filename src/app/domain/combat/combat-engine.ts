@@ -132,7 +132,8 @@ export class CombatEngine {
         f.blocking = this.isBlocking(f, other, inp);
         if (f.blocking) vx = 0;
         f.vel.x = vx;
-        f.stance = f.pos.y < GROUND_Y - 1 ? 'jump' : vx !== 0 ? 'walk' : inp.down ? 'crouch' : 'idle';
+        f.stance =
+          f.pos.y < GROUND_Y - 1 ? 'jump' : vx !== 0 ? 'walk' : inp.down ? 'crouch' : 'idle';
 
         if (pressed(inp, prev, 'up') && f.jumpCount < 1) {
           f.vel.y = -def.jumpVelocity;
@@ -166,18 +167,24 @@ export class CombatEngine {
     return away && f.pos.y >= GROUND_Y - 1;
   }
 
-  private tryStartMove(f: FighterRuntime, def: CharacterDef, inp: InputState, prev: InputState): boolean {
+  private tryStartMove(
+    f: FighterRuntime,
+    def: CharacterDef,
+    inp: InputState,
+    prev: InputState,
+  ): boolean {
     const grounded = f.pos.y >= GROUND_Y - 1;
     const canAct = !f.currentMove && this.timeMs >= f.stunUntilMs;
     if (!canAct) return false;
 
-    const choose = (): typeof def.moves[keyof typeof def.moves] | null => {
+    const choose = (): (typeof def.moves)[keyof typeof def.moves] | null => {
       if (pressed(inp, prev, 'mercy') && f.meter >= 100 && grounded) return def.moves.mercy;
       if (pressed(inp, prev, 'special') && f.meter >= 50 && grounded) return def.moves.special;
       if (pressed(inp, prev, 'projectile') && grounded) return def.moves.projectile;
       if (pressed(inp, prev, 'heavy')) return grounded ? def.moves.heavy : def.moves.air;
       if (pressed(inp, prev, 'light1')) return grounded ? def.moves.light1 : def.moves.air;
-      if (pressed(inp, prev, 'light2')) return grounded ? (inp.down ? def.moves.crouchHeavy : def.moves.light2) : def.moves.air;
+      if (pressed(inp, prev, 'light2'))
+        return grounded ? (inp.down ? def.moves.crouchHeavy : def.moves.light2) : def.moves.air;
       return null;
     };
 
@@ -205,7 +212,12 @@ export class CombatEngine {
     return true;
   }
 
-  private runActiveMove(f: FighterRuntime, def: CharacterDef, other: FighterRuntime, dt: number): void {
+  private runActiveMove(
+    f: FighterRuntime,
+    def: CharacterDef,
+    other: FighterRuntime,
+    dt: number,
+  ): void {
     const move = f.currentMove!;
     f.moveElapsedMs += dt * 1000;
     const t = f.moveElapsedMs;
@@ -223,12 +235,25 @@ export class CombatEngine {
       const body = this.bodyRect(other);
       if (rectsOverlap(hb, body)) {
         f.hitRegistered = true;
-        this.applyHit(f, other, move.damage, move.knockback, move.hitstunMs, move.launch ?? false, move.kind);
+        this.applyHit(
+          f,
+          other,
+          move.damage,
+          move.knockback,
+          move.hitstunMs,
+          move.launch ?? false,
+          move.kind,
+        );
       }
     }
 
     // Charge specials actually travel across the arena.
-    if (move.kind === 'special' && def.specialFx === 'snail-charge' && t >= startupMs && t <= startupMs + activeMs) {
+    if (
+      move.kind === 'special' &&
+      def.specialFx === 'snail-charge' &&
+      t >= startupMs &&
+      t <= startupMs + activeMs
+    ) {
       f.vel.x = (f.facing === 'right' ? 1 : -1) * 360;
     } else {
       f.vel.x *= Math.pow(0.02, dt);
@@ -357,7 +382,9 @@ export class CombatEngine {
 
   private updateProjectiles(dt: number): void {
     const gravityArc = (p: ProjectileRuntime): number =>
-      p.projectileId === 'cucumis' || p.projectileId === 'turd' || p.projectileId === 'rock' ? GRAVITY * 0.55 : 0;
+      p.projectileId === 'cucumis' || p.projectileId === 'turd' || p.projectileId === 'rock'
+        ? GRAVITY * 0.55
+        : 0;
 
     for (const p of this.projectiles) {
       p.pos.x += p.vel.x * dt;
@@ -368,7 +395,8 @@ export class CombatEngine {
         p.dead = true;
         this.sprayBlood({ pos: { x: p.pos.x, y: GROUND_Y - 40 } } as FighterRuntime, 4);
       }
-      if (this.timeMs >= p.expiresAtMs || p.pos.x < -80 || p.pos.x > ARENA_WIDTH + 80) p.dead = true;
+      if (this.timeMs >= p.expiresAtMs || p.pos.x < -80 || p.pos.x > ARENA_WIDTH + 80)
+        p.dead = true;
 
       if (!p.dead) {
         const target = this.fighters[p.ownerSide === 'p1' ? 'p2' : 'p1'];

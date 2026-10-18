@@ -90,7 +90,7 @@ Received:   74.4921875
   31 |   test('walking moves p1 horizontally', async ({ page }) => {
   32 |     await page.goto('/select');
   33 |     // Turn the CPU off so p2 doesn't shove p1 back during the measurement.
-  34 |     await page.getByText('CPU opponent').click();
+  34 |     await page.getByTestId('cpu-toggle').uncheck();
   35 |     await page.getByTestId('fight-btn').click();
   36 |     await expect(page.getByTestId('announce')).toHaveText('PUGNA!');
   37 |     await page.waitForTimeout(1800); // let the intro pass — input is locked during it

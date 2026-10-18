@@ -24,10 +24,15 @@ import { GameStore } from '../../store/game.store';
       </p>
 
       <nav class="menu">
-        <a class="btn primary" routerLink="/select" data-testid="start-btn" (click)="store.goSelect()">
+        <a
+          class="btn primary"
+          routerLink="/select"
+          data-testid="start-btn"
+          (click)="store.goSelect()"
+        >
           Begin the Combat
         </a>
-        <span class="hint">WASD move \u00B7 F/G jab \u00B7 H heavy \u00B7 J projectile \u00B7 B special \u00B7 N mercy</span>
+        <span class="hint">WASD move · F/G jab · H heavy · J projectile · B special · N mercy</span>
       </nav>
 
       <ul class="roster-strip">
@@ -39,7 +44,7 @@ import { GameStore } from '../../store/game.store';
         }
       </ul>
 
-      <div class="colophon">Anno Domini MMXXVI \u2014 written in the margin, not the text</div>
+      <div class="colophon">Anno Domini MMXXVI — written in the margin, not the text</div>
     </main>
   `,
 })

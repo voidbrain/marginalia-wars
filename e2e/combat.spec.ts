@@ -6,7 +6,7 @@ import { test, expect } from '@playwright/test';
 async function enterFight(page: import('@playwright/test').Page) {
   await page.goto('/select');
   // Disable CPU so p2 stands still for deterministic damage checks.
-  await page.getByText('CPU opponent').click();
+  await page.getByTestId('cpu-toggle').uncheck();
   await page.getByTestId('fight-btn').click();
   await expect(page.getByTestId('arena')).toBeVisible();
   await page.waitForTimeout(1800); // let PUGNA! intro pass

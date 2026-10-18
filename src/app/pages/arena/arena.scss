@@ -16,7 +16,9 @@
   aspect-ratio: 960 / 540;
   overflow: hidden;
   border: 6px solid #3a2410;
-  box-shadow: 0 0 0 3px #b8934f, 0 14px 40px rgba(0, 0, 0, 0.6);
+  box-shadow:
+    0 0 0 3px #b8934f,
+    0 14px 40px rgba(0, 0, 0, 0.6);
   background: #e2c98d;
 }
 
@@ -157,7 +159,9 @@
   font-family: 'UnifrakturMaguntia', serif;
   font-size: clamp(40px, 9vw, 96px);
   color: #7a1f16;
-  text-shadow: 3px 4px 0 rgba(243, 226, 179, 0.9), 6px 8px 12px rgba(0, 0, 0, 0.4);
+  text-shadow:
+    3px 4px 0 rgba(243, 226, 179, 0.9),
+    6px 8px 12px rgba(0, 0, 0, 0.4);
   z-index: 45;
   animation: slam 420ms cubic-bezier(0.2, 1.6, 0.4, 1) both;
   pointer-events: none;

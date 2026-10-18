@@ -36,13 +36,19 @@ test.describe('Marginalia Fighters — navigation flow', () => {
     await expect(page.getByTestId('announce')).toHaveText('PUGNA!');
     await page.waitForTimeout(1800); // let the intro pass — input is locked during it
 
-    const before = await page.getByTestId('fighter-p1').boundingBox();
+    // Measure engine position via the sprite's center-x (the wrapper div is a
+    // full-size overlay; only the inner sprite box tracks the fighter).
+    const centerX = async () => {
+      const b = await page.getByTestId('fighter-p1').locator('.sprite').boundingBox();
+      return b!.x + b!.width / 2;
+    };
+    const before = await centerX();
     await page.keyboard.down('KeyD');
-    await page.waitForTimeout(600);
+    await page.waitForTimeout(900);
     await page.keyboard.up('KeyD');
-    const after = await page.getByTestId('fighter-p1').boundingBox();
+    const after = await centerX();
 
-    expect(after!.x).toBeGreaterThan(before!.x + 30);
+    expect(after).toBeGreaterThan(before + 40);
   });
 
   test('timer counts down during the round', async ({ page }) => {

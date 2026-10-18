@@ -14,10 +14,10 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
       <span class="edge bottom"></span>
       <span class="edge left"></span>
       <span class="edge right"></span>
-      <span class="corner tl">\u271D</span>
-      <span class="corner tr">\u271D</span>
-      <span class="corner bl">\u271D</span>
-      <span class="corner br">\u271D</span>
+      <span class="corner tl">✝</span>
+      <span class="corner tr">✝</span>
+      <span class="corner bl">✝</span>
+      <span class="corner br">✝</span>
     </div>
   `,
 })
