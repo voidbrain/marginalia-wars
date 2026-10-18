@@ -1,0 +1,70 @@
+:host {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  z-index: 30;
+}
+
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  animation: unfurl 280ms ease-out both;
+  filter: drop-shadow(4px 6px 0 rgba(40, 20, 5, 0.35));
+}
+
+.ribbon {
+  background: radial-gradient(circle at 30% 20%, #f3e2b3 0%, #e7cf95 55%, #d9bd7a 100%);
+  border-top: 4px solid #7a1f16;
+  border-bottom: 4px solid #7a1f16;
+  padding: 14px 46px;
+  max-width: 72vw;
+  text-align: center;
+}
+
+.latin {
+  margin: 0;
+  font-family: 'UnifrakturCook', 'Papyrus', serif;
+  font-size: clamp(18px, 3.4vw, 34px);
+  letter-spacing: 0.06em;
+  color: #5a1410;
+  text-transform: uppercase;
+}
+
+.gloss {
+  margin: 6px 0 0;
+  font-style: italic;
+  color: #6b5223;
+  font-size: clamp(11px, 1.6vw, 15px);
+}
+
+.scroll {
+  width: 34px;
+  height: 92px;
+  background: linear-gradient(180deg, #caa662, #8a6a34 60%, #6d5227);
+  border-radius: 16px;
+  box-shadow: inset 0 0 0 3px #5c421d;
+}
+
+.mercy .ribbon {
+  border-color: #3a0d0a;
+  background: radial-gradient(circle at 50% 30%, #f6d9a0 0%, #e0a86a 60%, #b97a44 100%);
+}
+
+.mercy .latin {
+  color: #7a1410;
+  text-shadow: 0 0 1px #c33;
+}
+
+@keyframes unfurl {
+  from {
+    transform: scaleX(0.2) rotate(-2deg);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1) rotate(0deg);
+    opacity: 1;
+  }
+}
