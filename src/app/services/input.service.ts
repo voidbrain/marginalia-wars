@@ -1,4 +1,4 @@
-import { Injectable, NgZone, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { InputState, emptyInput } from '../domain/combat/combat-engine';
 
 type BindKey = keyof InputState;
@@ -28,8 +28,6 @@ export class InputService implements OnDestroy {
   private readonly boundKeyDown = (e: KeyboardEvent) => this.onKey(e, true);
   private readonly boundKeyUp = (e: KeyboardEvent) => this.onKey(e, false);
 
-  constructor(private readonly zone: NgZone) {}
-
   attach(): void {
     window.addEventListener('keydown', this.boundKeyDown);
     window.addEventListener('keyup', this.boundKeyUp);
@@ -48,10 +46,9 @@ export class InputService implements OnDestroy {
     const bind = KEY_MAP[e.code];
     if (!bind) return;
     e.preventDefault();
-    // Mutations happen in the engine loop; run listener work out of the zone.
-    this.zone.runOutsideAngular(() => {
-      this.p1[bind] = down;
-    });
+    // Zoneless app: writes go straight into mutable state; the game loop
+    // reads it once per animation frame, so no change-detection churn here.
+    this.p1[bind] = down;
   }
 
   snapshotP1(): InputState {
