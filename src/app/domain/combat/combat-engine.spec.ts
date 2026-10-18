@@ -64,7 +64,6 @@ function run(engine: CombatEngine, ms: number, stepMs = 16, i = inputs()): void 
   for (let t = 0; t < ms; t += stepMs) engine.step(stepMs, i);
 }
 
-
 /** Place p1 right next to p2 (facing each other) by choosing spawn positions. */
 function adjacent(p1: CharacterDef, p2: CharacterDef): CombatEngine {
   // p2 default spawn is 700; put p1 so its hitbox (x+30..x+100) overlaps p2's body.

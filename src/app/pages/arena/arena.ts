@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { GameStore } from '../../store/game.store';
 import { InputService } from '../../services/input.service';
@@ -65,7 +59,13 @@ const ROUND_SECONDS = 60;
           }
 
           @for (pr of projectiles(s); track pr.id) {
-            <img class="projectile" [src]="pr.sprite" [style.left.px]="pr.pos.x" [style.top.px]="pr.pos.y" alt="" />
+            <img
+              class="projectile"
+              [src]="pr.sprite"
+              [style.left.px]="pr.pos.x"
+              [style.top.px]="pr.pos.y"
+              alt=""
+            />
           }
 
           @for (fx of fxList(); track $index) {
@@ -106,7 +106,11 @@ const ROUND_SECONDS = 60;
           />
         }
 
-        <app-move-banner [caption]="bannerCaption()" [gloss]="bannerGloss()" [isMercy]="bannerMercy()" />
+        <app-move-banner
+          [caption]="bannerCaption()"
+          [gloss]="bannerGloss()"
+          [isMercy]="bannerMercy()"
+        />
 
         @if (intro() && !finished()) {
           <div class="announce" data-testid="announce">{{ introText() }}</div>
@@ -117,7 +121,9 @@ const ROUND_SECONDS = 60;
             <p class="verdict">{{ verdictText() }}</p>
             <div class="end-actions">
               <button class="btn" data-testid="rematch-btn" (click)="rematch()">Rematch</button>
-              <button class="btn ghost" data-testid="result-btn" (click)="toResult()">Chronicler's Verdict</button>
+              <button class="btn ghost" data-testid="result-btn" (click)="toResult()">
+                Chronicler's Verdict
+              </button>
             </div>
           </div>
         }
@@ -126,8 +132,8 @@ const ROUND_SECONDS = 60;
       </div>
 
       <p class="controls-note">
-        A/D walk \u00B7 W jump \u00B7 S crouch \u00B7 hold back to block \u00B7 F/G strikes \u00B7 H heavy \u00B7 J projectile \u00B7
-        B special (50\u269C) \u00B7 N mercy (100\u269C) \u00B7 Esc quit
+        A/D walk · W jump · S crouch · hold back to block · F/G strikes · H heavy · J projectile · B
+        special (50⚜) · N mercy (100⚜) · Esc quit
       </p>
     </div>
   `,
@@ -243,7 +249,9 @@ export class ArenaPage {
       const s1 = this.engine.snapshot();
       const winnerSide = s1.p1.hp / s1.p1.maxHp >= s2hp(s1) ? 'p1' : 'p2';
       this.finished.set(true);
-      this.verdictText.set(`TEMPUS FUGIT — ${winnerSide === 'p1' ? this.p1Char()?.name : this.p2Char()?.name} wins on vitality`);
+      this.verdictText.set(
+        `TEMPUS FUGIT — ${winnerSide === 'p1' ? this.p1Char()?.name : this.p2Char()?.name} wins on vitality`,
+      );
       this.store.finishRound(winnerSide);
     }
   }
@@ -269,7 +277,8 @@ export class ArenaPage {
                   ? 'dragon'
                   : 'clouds';
           this.pushFx(kind, ev.source, ev.type === 'mercy-start' ? 2400 : 1500);
-          if (ev.type === 'mercy-start' && fxKind === 'lute-dirge') this.pushFx('lute', ev.source, 2400);
+          if (ev.type === 'mercy-start' && fxKind === 'lute-dirge')
+            this.pushFx('lute', ev.source, 2400);
           break;
         }
         case 'decapitation':

@@ -22,7 +22,7 @@ import { GameStore } from '../../store/game.store';
       }
 
       <div class="score" data-testid="score">
-        <span>{{ store.p1Wins() }} \u2014 {{ store.p2Wins() }}</span>
+        <span>{{ store.p1Wins() }} — {{ store.p2Wins() }}</span>
       </div>
 
       <nav class="menu">

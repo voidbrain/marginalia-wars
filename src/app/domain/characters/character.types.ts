@@ -11,10 +11,34 @@ export interface ProjectileSpec {
 }
 
 export const PROJECTILES: Record<ProjectileKind, ProjectileSpec> = {
-  spear: { id: 'spear', sprite: 'assets/sprites/prop-spear.png', speedX: 620, arcY: 0, lifetimeMs: 1400 },
-  cucumis: { id: 'cucumis', sprite: 'assets/sprites/prop-cucumis.png', speedX: 480, arcY: -260, lifetimeMs: 1500 },
-  turd: { id: 'turd', sprite: 'assets/sprites/prop-turd.png', speedX: 380, arcY: -420, lifetimeMs: 1600 },
-  rock: { id: 'rock', sprite: 'assets/sprites/blood-splat.png', speedX: 420, arcY: -340, lifetimeMs: 1500 },
+  spear: {
+    id: 'spear',
+    sprite: 'assets/sprites/prop-spear.png',
+    speedX: 620,
+    arcY: 0,
+    lifetimeMs: 1400,
+  },
+  cucumis: {
+    id: 'cucumis',
+    sprite: 'assets/sprites/prop-cucumis.png',
+    speedX: 480,
+    arcY: -260,
+    lifetimeMs: 1500,
+  },
+  turd: {
+    id: 'turd',
+    sprite: 'assets/sprites/prop-turd.png',
+    speedX: 380,
+    arcY: -420,
+    lifetimeMs: 1600,
+  },
+  rock: {
+    id: 'rock',
+    sprite: 'assets/sprites/blood-splat.png',
+    speedX: 420,
+    arcY: -340,
+    lifetimeMs: 1500,
+  },
   'dragon-fire': {
     id: 'dragon-fire',
     sprite: 'assets/sprites/special-dragon.png',
@@ -24,7 +48,13 @@ export const PROJECTILES: Record<ProjectileKind, ProjectileSpec> = {
   },
 };
 
-export type SpecialFxKind = 'cavalry-charge' | 'snail-charge' | 'convent-revolt' | 'rainbow-fart' | 'dragon-summon' | 'lute-dirge';
+export type SpecialFxKind =
+  | 'cavalry-charge'
+  | 'snail-charge'
+  | 'convent-revolt'
+  | 'rainbow-fart'
+  | 'dragon-summon'
+  | 'lute-dirge';
 
 export interface CharacterPalette {
   readonly accent: string;

@@ -61,7 +61,12 @@ export class CpuService {
     };
   }
 
-  private decide(self: FighterRuntime, enemy: FighterRuntime, def: CharacterDef, diff: Difficulty): InputState {
+  private decide(
+    self: FighterRuntime,
+    enemy: FighterRuntime,
+    def: CharacterDef,
+    diff: Difficulty,
+  ): InputState {
     const input = emptyInput();
     const dx = enemy.pos.x - self.pos.x;
     const adx = Math.abs(dx);
