@@ -1,0 +1,69 @@
+name: Deploy to GitHub Pages
+
+# NOTE (adapted from the a-bando-fpv-app reference workflow):
+#   - This repo serves GitHub Pages from the `gh-pages` BRANCH (configured in
+#     Settings -> Pages), NOT the native "deploy-pages" artifact pipeline.
+#     So this workflow builds and pushes to gh-pages via angular-cli-ghpages,
+#     mirroring the local `npm run deploy:local` script.
+#   - The reference's hardcoded baseHref (/a-bando-fpv-app/) is replaced by a
+#     dynamic value derived from the repository name.
+#   - The version-stamp step was dropped: this app has no src/app/version.ts.
+#   - A 404.html copy is added so Angular deep links work on Pages (SPA routing).
+
+on:
+  push:
+    branches: [main]
+  # Allow running this workflow manually from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: write # needed to push the gh-pages branch
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm run test -- --watch=false
+
+      - name: Build
+        # Production build; base href must match the Pages project path
+        # (https://<user>.github.io/<repo>/). Artifacts land in
+        # dist/marginalia-fighters/browser
+        run: |
+          npx ng build --base-href "/${GITHUB_REPOSITORY#*/}/"
+
+      - name: SPA fallback for deep links
+        # GitHub Pages has no server-side rewrites; serve index.html on 404
+        run: cp dist/marginalia-fighters/browser/index.html dist/marginalia-fighters/browser/404.html
+
+      - name: Disable Jekyll
+        # GitHub Pages must serve the Angular bundle as-is, not process it with Jekyll
+        run: touch dist/marginalia-fighters/browser/.nojekyll
+
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist/marginalia-fighters/browser
+          publish_branch: gh-pages
