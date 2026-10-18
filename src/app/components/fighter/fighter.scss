@@ -1,0 +1,147 @@
+:host {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.fighter {
+  position: absolute;
+  transform: translateX(-50%);
+  transition: filter 80ms linear;
+
+  .sprite {
+    display: block;
+    height: 170px;
+    width: auto;
+    user-select: none;
+    -webkit-user-drag: none;
+    image-rendering: auto;
+    filter: drop-shadow(3px 6px 4px rgba(40, 20, 5, 0.45));
+  }
+}
+
+.facing-left .sprite {
+  transform: scaleX(-1);
+}
+
+/* Stance flavour — cheap procedural "animation" on a single key art. */
+.stance-idle .sprite {
+  animation: bob 900ms ease-in-out infinite;
+}
+
+.stance-walk .sprite {
+  animation: bob 380ms ease-in-out infinite;
+}
+
+.stance-jump .sprite {
+  transform: translateY(-8px) rotate(-3deg);
+}
+
+.facing-left.stance-jump .sprite {
+  transform: scaleX(-1) translateY(-8px) rotate(3deg);
+}
+
+.stance-crouch .sprite {
+  transform: translateY(14px) scaleY(0.9);
+}
+
+.facing-left.stance-crouch .sprite {
+  transform: scaleX(-1) translateY(14px) scaleY(0.9);
+}
+
+.stance-block .sprite {
+  filter: drop-shadow(0 0 6px #cfd8ff) drop-shadow(3px 6px 4px rgba(40, 20, 5, 0.45));
+}
+
+.stance-hit .sprite {
+  animation: shake 140ms linear infinite;
+  filter: brightness(1.35) saturate(0.6) drop-shadow(3px 6px 4px rgba(40, 20, 5, 0.45));
+}
+
+.stance-attack .sprite,
+.stance-special .sprite,
+.stance-mercy .sprite {
+  transform: translateY(-4px) rotate(4deg) scale(1.04);
+}
+
+.facing-left.stance-attack .sprite,
+.facing-left.stance-special .sprite,
+.facing-left.stance-mercy .sprite {
+  transform: scaleX(-1) translateY(-4px) rotate(-4deg) scale(1.04);
+}
+
+.stance-special .sprite {
+  filter: drop-shadow(0 0 10px #e7c25a) drop-shadow(3px 6px 4px rgba(40, 20, 5, 0.45));
+}
+
+.stance-mercy .sprite {
+  filter: drop-shadow(0 0 14px #b13a2e) drop-shadow(3px 6px 4px rgba(40, 20, 5, 0.45));
+}
+
+.stance-victory .sprite {
+  animation: cheer 600ms ease-in-out infinite;
+}
+
+.stance-ko .sprite {
+  transform: rotate(84deg) translateY(26px);
+  opacity: 0.85;
+  filter: grayscale(0.6) drop-shadow(3px 6px 4px rgba(40, 20, 5, 0.45));
+}
+
+.facing-left.stance-ko .sprite {
+  transform: scaleX(-1) rotate(84deg) translateY(26px);
+}
+
+.hit-flash {
+  position: absolute;
+  inset: -6px;
+  background: radial-gradient(circle, rgba(255, 240, 200, 0.85), transparent 70%);
+  animation: flash 160ms ease-out forwards;
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    margin-bottom: 0;
+  }
+  50% {
+    margin-bottom: 6px;
+  }
+}
+
+@keyframes shake {
+  0% {
+    margin-left: 0;
+  }
+  25% {
+    margin-left: -5px;
+  }
+  75% {
+    margin-left: 5px;
+  }
+  100% {
+    margin-left: 0;
+  }
+}
+
+@keyframes cheer {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes flash {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

@@ -1,0 +1,224 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #241708;
+}
+
+.frame {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 960 / 540;
+  overflow: hidden;
+  border: 6px solid #3a2410;
+  box-shadow: 0 0 0 3px #b8934f, 0 14px 40px rgba(0, 0, 0, 0.6);
+  background: #e2c98d;
+}
+
+/* Projectiles & blood are positioned in engine coordinates scaled by % */
+.projectile,
+.blood {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.projectile {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  z-index: 25;
+}
+
+.blood {
+  width: 26px;
+  height: 26px;
+  opacity: 0.85;
+  z-index: 26;
+}
+
+/* Full-arena special FX overlays (knight cavalry, dragon, clouds, lute, head) */
+.fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 28;
+  background-repeat: no-repeat;
+}
+
+.fx-cavalry {
+  background-image: url('/assets/sprites/special-knights-charge.png');
+  background-size: 140% auto;
+  background-position: left 22%;
+  animation: sweep-right 1.4s linear forwards;
+}
+
+.fx-dragon {
+  background-image: url('/assets/sprites/special-dragon.png');
+  background-size: 55% auto;
+  background-position: right 30%;
+  animation: dragon-in 1.8s ease-out forwards;
+}
+
+.fx-clouds {
+  background-image: url('/assets/sprites/fx-clouds.png');
+  background-size: 90% auto;
+  background-position: 50% 70%;
+  opacity: 0.9;
+  animation: puff 1.2s ease-out forwards;
+}
+
+.fx-lute {
+  background-image: url('/assets/sprites/special-mercy-lute.png');
+  background-size: 34% auto;
+  background-position: 50% 78%;
+  animation: fade-hold 2.2s ease-out forwards;
+}
+
+.fx-head {
+  background-image: url('/assets/sprites/prop-head.png');
+  background-size: 12% auto;
+  animation: head-flop 1.4s ease-in forwards;
+}
+
+@keyframes sweep-right {
+  from {
+    background-position: -140% 22%;
+  }
+  to {
+    background-position: 240% 22%;
+  }
+}
+
+@keyframes dragon-in {
+  0% {
+    background-position: 130% 30%;
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    background-position: 40% 34%;
+    opacity: 1;
+  }
+}
+
+@keyframes puff {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes fade-hold {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes head-flop {
+  0% {
+    background-position: 50% 30%;
+    opacity: 1;
+  }
+  100% {
+    background-position: 70% 95%;
+    opacity: 0.4;
+  }
+}
+
+.announce {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: clamp(40px, 9vw, 96px);
+  color: #7a1f16;
+  text-shadow: 3px 4px 0 rgba(243, 226, 179, 0.9), 6px 8px 12px rgba(0, 0, 0, 0.4);
+  z-index: 45;
+  animation: slam 420ms cubic-bezier(0.2, 1.6, 0.4, 1) both;
+  pointer-events: none;
+}
+
+@keyframes slam {
+  from {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.overlay-end {
+  position: absolute;
+  inset: 0;
+  z-index: 46;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: rgba(36, 23, 8, 0.55);
+  backdrop-filter: blur(2px);
+
+  .verdict {
+    font-family: 'UnifrakturCook', serif;
+    font-size: clamp(22px, 4vw, 40px);
+    color: #f3e2b3;
+    text-shadow: 2px 3px 0 #2a1608;
+    margin: 0;
+  }
+}
+
+.end-actions {
+  display: flex;
+  gap: 14px;
+}
+
+.btn {
+  font-family: 'UnifrakturCook', serif;
+  font-size: 18px;
+  color: #f3e2b3;
+  background: linear-gradient(180deg, #6b1512, #3f0d0a);
+  border: 3px solid #2a1608;
+  padding: 8px 26px;
+  cursor: pointer;
+
+  &.ghost {
+    background: transparent;
+    border-color: #f3e2b3;
+  }
+}
+
+.controls-note {
+  text-align: center;
+  color: #b8934f;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  margin-top: 14px;
+}

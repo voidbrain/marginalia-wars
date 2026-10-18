@@ -1,0 +1,84 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: radial-gradient(circle at 50% 30%, #f0dfae 0%, #e2c98d 55%, #cbb071 100%);
+}
+
+.folio {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 56px 28px;
+  text-align: center;
+  color: #3a2410;
+}
+
+.rubric {
+  font-family: 'UnifrakturCook', serif;
+  color: #7a1f16;
+  letter-spacing: 0.14em;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.title {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: clamp(32px, 6vw, 56px);
+  margin: 10px 0 22px;
+  color: #2a1608;
+}
+
+.victor {
+  width: 220px;
+  height: 220px;
+  object-fit: contain;
+  background: rgba(255, 250, 235, 0.6);
+  border: 4px solid #3a2410;
+  border-radius: 50%;
+  padding: 12px;
+  filter: sepia(0.2) drop-shadow(4px 6px 0 rgba(40, 20, 5, 0.25));
+}
+
+.quote {
+  font-family: 'MedievalSharp', serif;
+  font-size: 19px;
+  font-style: italic;
+  max-width: 480px;
+  margin: 22px auto 6px;
+}
+
+.epithet {
+  font-size: 13px;
+  color: #6b5223;
+}
+
+.score {
+  font-family: 'UnifrakturCook', serif;
+  font-size: 34px;
+  color: #7a1f16;
+  margin: 22px 0 30px;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn {
+  font-family: 'UnifrakturCook', serif;
+  font-size: 19px;
+  color: #f3e2b3;
+  background: linear-gradient(180deg, #6b1512, #3f0d0a);
+  border: 3px solid #2a1608;
+  padding: 9px 30px;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 3px 4px 0 rgba(40, 20, 5, 0.45);
+
+  &.ghost {
+    background: transparent;
+    color: #3a2410;
+    box-shadow: none;
+  }
+}

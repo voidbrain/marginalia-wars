@@ -223,7 +223,7 @@ export class CombatEngine {
       const body = this.bodyRect(other);
       if (rectsOverlap(hb, body)) {
         f.hitRegistered = true;
-        this.applyHit(f, other, move.damage, move.knockback, move.hitstunMs, move.launch, move.kind);
+        this.applyHit(f, other, move.damage, move.knockback, move.hitstunMs, move.launch ?? false, move.kind);
       }
     }
 

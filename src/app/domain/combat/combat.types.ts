@@ -43,7 +43,7 @@ export interface MoveTiming {
   recoveryMs: number;
 }
 
-export interface HitboxSpec extends Rect {}
+export type HitboxSpec = Rect;
 
 export interface MoveDef {
   readonly id: string;
