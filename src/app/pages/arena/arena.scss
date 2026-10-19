@@ -56,21 +56,21 @@
 }
 
 .fx-cavalry {
-  background-image: url('/assets/sprites/special-knights-charge.svg');
+  background-image: url('assets/sprites/special-knights-charge.svg');
   background-size: 140% auto;
   background-position: left 22%;
   animation: sweep-right 1.4s linear forwards;
 }
 
 .fx-dragon {
-  background-image: url('/assets/sprites/special-dragon.svg');
+  background-image: url('assets/sprites/special-dragon.svg');
   background-size: 55% auto;
   background-position: right 30%;
   animation: dragon-in 1.8s ease-out forwards;
 }
 
 .fx-clouds {
-  background-image: url('/assets/sprites/fx-clouds.svg');
+  background-image: url('assets/sprites/fx-clouds.svg');
   background-size: 90% auto;
   background-position: 50% 70%;
   opacity: 0.9;
@@ -78,14 +78,14 @@
 }
 
 .fx-lute {
-  background-image: url('/assets/sprites/special-mercy-lute.svg');
+  background-image: url('assets/sprites/special-mercy-lute.svg');
   background-size: 34% auto;
   background-position: 50% 78%;
   animation: fade-hold 2.2s ease-out forwards;
 }
 
 .fx-head {
-  background-image: url('/assets/sprites/prop-head.svg');
+  background-image: url('assets/sprites/prop-head.svg');
   background-size: 12% auto;
   animation: head-flop 1.4s ease-in forwards;
 }
