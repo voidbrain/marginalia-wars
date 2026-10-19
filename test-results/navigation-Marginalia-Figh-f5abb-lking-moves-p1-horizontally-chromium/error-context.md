@@ -14,8 +14,8 @@
 ```
 Error: expect(received).toBeGreaterThan(expected)
 
-Expected: > 89.4921875
-Received:   74.4921875
+Expected: > 179.078125
+Received:   161.578125
 ```
 
 # Page snapshot
@@ -95,32 +95,38 @@ Received:   74.4921875
   36 |     await expect(page.getByTestId('announce')).toHaveText('PUGNA!');
   37 |     await page.waitForTimeout(1800); // let the intro pass — input is locked during it
   38 | 
-  39 |     const before = await page.getByTestId('fighter-p1').boundingBox();
-  40 |     await page.keyboard.down('KeyD');
-  41 |     await page.waitForTimeout(600);
-  42 |     await page.keyboard.up('KeyD');
-  43 |     const after = await page.getByTestId('fighter-p1').boundingBox();
-  44 | 
-> 45 |     expect(after!.x).toBeGreaterThan(before!.x + 30);
-     |                      ^ Error: expect(received).toBeGreaterThan(expected)
-  46 |   });
-  47 | 
-  48 |   test('timer counts down during the round', async ({ page }) => {
-  49 |     await page.goto('/select');
-  50 |     await page.getByTestId('fight-btn').click();
-  51 |     const timer = page.getByTestId('timer');
-  52 |     const first = Number(await timer.textContent());
-  53 |     await page.waitForTimeout(2500);
-  54 |     const later = Number(await timer.textContent());
-  55 |     expect(later).toBeLessThan(first);
-  56 |   });
-  57 | 
-  58 |   test('escape returns to select screen', async ({ page }) => {
-  59 |     await page.goto('/select');
-  60 |     await page.getByTestId('fight-btn').click();
-  61 |     await page.keyboard.press('Escape');
-  62 |     await expect(page.getByTestId('select')).toBeVisible();
-  63 |   });
-  64 | });
-  65 | 
+  39 |     // Measure engine position via the sprite's center-x (the wrapper div is a
+  40 |     // full-size overlay; only the inner sprite box tracks the fighter).
+  41 |     const centerX = async () => {
+  42 |       const b = await page.getByTestId('fighter-p1').locator('.sprite').boundingBox();
+  43 |       return b!.x + b!.width / 2;
+  44 |     };
+  45 |     const before = await centerX();
+  46 |     await page.keyboard.down('KeyD');
+  47 |     await page.waitForTimeout(900);
+  48 |     await page.keyboard.up('KeyD');
+  49 |     const after = await centerX();
+  50 | 
+> 51 |     expect(after).toBeGreaterThan(before + 40);
+     |                   ^ Error: expect(received).toBeGreaterThan(expected)
+  52 |   });
+  53 | 
+  54 |   test('timer counts down during the round', async ({ page }) => {
+  55 |     await page.goto('/select');
+  56 |     await page.getByTestId('fight-btn').click();
+  57 |     const timer = page.getByTestId('timer');
+  58 |     const first = Number(await timer.textContent());
+  59 |     await page.waitForTimeout(2500);
+  60 |     const later = Number(await timer.textContent());
+  61 |     expect(later).toBeLessThan(first);
+  62 |   });
+  63 | 
+  64 |   test('escape returns to select screen', async ({ page }) => {
+  65 |     await page.goto('/select');
+  66 |     await page.getByTestId('fight-btn').click();
+  67 |     await page.keyboard.press('Escape');
+  68 |     await expect(page.getByTestId('select')).toBeVisible();
+  69 |   });
+  70 | });
+  71 | 
 ```

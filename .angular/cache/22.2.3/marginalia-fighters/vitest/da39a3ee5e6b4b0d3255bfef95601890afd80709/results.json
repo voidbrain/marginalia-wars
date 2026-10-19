@@ -1,1 +1,1 @@
-{"version":1,"projects":{"marginalia-fighters":{"files":{"src/app/domain/combat/combat-engine.spec.ts":{"failed":false,"duration":64.3347920000001,"lastRun":1792363211158},"src/app/domain/combat/probe.spec.ts":{"failed":false,"duration":2.04295900000011,"lastRun":1792362175897}}}}}
+{"version":1,"projects":{"marginalia-fighters":{"files":{"src/app/domain/combat/combat-engine.spec.ts":{"failed":false,"duration":71.43002700000011,"lastRun":1792363715279},"src/app/domain/combat/probe.spec.ts":{"failed":false,"duration":2.04295900000011,"lastRun":1792362175897}}}}}
