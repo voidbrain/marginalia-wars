@@ -176,9 +176,74 @@ $fig-shadow: drop-shadow(3px 6px 4px rgba(40, 20, 5, 0.45));
   filter: grayscale(0.6);
 }
 
-.facing-left .arm {
-  /* keep the pivot correct under the mirrored rig box */
-  transform-origin: calc(100% - var(--ax, 50%)) var(--ay, 50%);
+.facing-left .rig { scale: -1 1; }
+
+/* Character-specific movement gives each marginalia figure a readable silhouette. */
+.character-rabbit.stance-idle .rig { animation: rabbit-snail-rock 1.15s ease-in-out infinite; }
+.character-rabbit.stance-walk .rig { animation: snail-scoot 380ms ease-in-out infinite; }
+.character-rabbit.stance-attack .rig,
+.character-rabbit.stance-special .rig { animation: rabbit-lunge 280ms cubic-bezier(.2,.9,.3,1) both; }
+
+.character-nun.stance-idle .rig { animation: nun-devotional-sway 1.8s ease-in-out infinite; }
+.character-nun.stance-attack .rig { animation: nun-slap 260ms ease-out both; }
+.character-nun.stance-special .rig { animation: nun-revolt 500ms ease-out both; }
+
+.character-knight.stance-idle .rig { animation: knight-armor-shift 1.5s ease-in-out infinite; }
+.character-knight.stance-attack .rig,
+.character-knight.stance-special .rig { animation: knight-lunge 240ms ease-out both; }
+
+.character-jester.stance-idle .rig { animation: jester-bounce 720ms ease-in-out infinite; }
+.character-jester.stance-walk .rig { animation: jester-prance 300ms ease-in-out infinite; }
+.character-jester.stance-attack .rig { animation: jester-flail 320ms ease-in-out both; }
+
+@keyframes rabbit-snail-rock {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-3px) rotate(1deg); }
+}
+@keyframes snail-scoot {
+  0%, 100% { transform: translateX(0) skewX(0); }
+  50% { transform: translateX(3px) skewX(-2deg); }
+}
+@keyframes rabbit-lunge {
+  0% { transform: translateX(0) rotate(0); }
+  45% { transform: translateX(12px) rotate(-7deg); }
+  100% { transform: translateX(0) rotate(1deg); }
+}
+@keyframes nun-devotional-sway {
+  0%, 100% { transform: rotate(-.5deg); }
+  50% { transform: rotate(.8deg); }
+}
+@keyframes nun-slap {
+  0% { transform: translateX(0) rotate(0); }
+  40% { transform: translateX(8px) rotate(5deg); }
+  100% { transform: translateX(0) rotate(0); }
+}
+@keyframes nun-revolt {
+  0% { transform: translateY(0) rotate(0); }
+  35% { transform: translateY(-10px) rotate(-4deg); }
+  100% { transform: translateY(0) rotate(0); }
+}
+@keyframes knight-armor-shift {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(1px) rotate(.6deg); }
+}
+@keyframes knight-lunge {
+  0% { transform: translateX(0) rotate(0); }
+  35% { transform: translateX(10px) rotate(-3deg); }
+  100% { transform: translateX(0) rotate(0); }
+}
+@keyframes jester-bounce {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-7px) rotate(1deg); }
+}
+@keyframes jester-prance {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-5px) rotate(3deg); }
+}
+@keyframes jester-flail {
+  0%, 100% { transform: rotate(0); }
+  35% { transform: rotate(-7deg) translateY(-5px); }
+  70% { transform: rotate(6deg) translateY(-2px); }
 }
 
 .hit-flash {
