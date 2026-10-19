@@ -10,7 +10,7 @@ Built with **Angular 22**, **zoneless change detection**, a **signal-based store
 
 ## ▶ Live demo
 
-Deployed to GitHub Pages from the `gh-pages` branch — see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Pushes to `main` run lint + tests + build and publish automatically via `.github/workflows/deploy.yml`; `npm run deploy:local` publishes straight from your machine with `ngh`.
+Deployed to GitHub Pages from the `gh-pages` branch — see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Pushes to `main` run lint + tests + build and publish automatically via `.github/workflows/deploy-gh-pages.yml`; `npm run deploy:local` publishes straight from your machine with `ngh`.
 
 ## 🎮 Roster & signature brutality
 

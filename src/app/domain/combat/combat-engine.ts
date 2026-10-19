@@ -163,8 +163,12 @@ export class CombatEngine {
   }
 
   private isBlocking(f: FighterRuntime, other: FighterRuntime, inp: InputState): boolean {
+    // Classic fighting-game guard: holding *away* from the opponent blocks —
+    // but only while grounded and idle/walking. A jump or crouch input means
+    // the player is doing something else, so it must not freeze movement.
     const away = (other.pos.x > f.pos.x && inp.left) || (other.pos.x < f.pos.x && inp.right);
-    return away && f.pos.y >= GROUND_Y - 1;
+    if (!away || inp.up || inp.down) return false;
+    return f.pos.y >= GROUND_Y - 1;
   }
 
   private tryStartMove(

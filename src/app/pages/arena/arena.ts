@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  ElementRef,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { GameStore } from '../../store/game.store';
 import { InputService } from '../../services/input.service';
@@ -40,7 +48,7 @@ const ROUND_SECONDS = 60;
   styleUrl: './arena.scss',
   template: `
     <div class="frame" data-testid="arena">
-      <div class="viewport" [style.aspect-ratio]="960 + ' / ' + 540">
+      <div class="viewport" #viewport>
         <app-stage
           [background]="stage().background"
           [name]="stage().name"
@@ -198,6 +206,7 @@ export class ArenaPage {
     };
     window.addEventListener('keydown', onKey);
     this.destroyRef.onDestroy(() => {
+      this.ro?.disconnect();
       cancelAnimationFrame(this.rafId);
       this.input.detach();
       window.removeEventListener('keydown', onKey);
@@ -209,6 +218,7 @@ export class ArenaPage {
     this.elapsedMs += dtMs;
     this.timeLeft.set(Math.max(0, ROUND_SECONDS - this.elapsedMs / 1000));
     if (this.intro() && this.elapsedMs > this.introUntilMs) this.intro.set(false);
+    this.observeViewport();
 
     const cur1 = this.input.snapshotP1();
     const inputs: Record<'p1' | 'p2', SideInputs> = {
@@ -307,14 +317,38 @@ export class ArenaPage {
   /* ---- snapshot -> template mappers (pure functions) ---- */
 
   /** Engine x (0..960) -> % of viewport width. */
+  /**
+   * Engine x (960-wide arena units) -> CSS pixels relative to the scaled
+   * viewport. Using real px (not %) keeps sprite positioning exact even when
+   * the viewport is letterboxed by aspect-ratio, and gives E2E tests a
+   * deterministic mapping to measure against.
+   */
   fighterPx(f: FighterRuntime): number {
-    return (f.pos.x / ARENA_WIDTH) * 100;
+    return this.viewportScale() * f.pos.x;
   }
 
-  /** Engine feet-y -> % bottom inside the viewport (ground sits at 13%). */
+  /** Engine feet-y -> pixel offset from the viewport's bottom edge. */
   fighterPy(f: FighterRuntime): number {
-    const groundBottomPct = ((ARENA_HEIGHT - GROUND_Y) / ARENA_HEIGHT) * 100;
-    return groundBottomPct + ((GROUND_Y - f.pos.y) / ARENA_HEIGHT) * 100;
+    const s = this.viewportScale();
+    return s * (ARENA_HEIGHT - GROUND_Y) + s * (GROUND_Y - f.pos.y);
+  }
+
+  private readonly viewportEl = viewChild<ElementRef<HTMLDivElement>>('viewport');
+  private readonly viewportW = signal(960);
+  private ro?: ResizeObserver;
+
+  private viewportScale(): number {
+    return this.viewportW() / ARENA_WIDTH;
+  }
+
+  private observeViewport(): void {
+    const el = this.viewportEl()?.nativeElement;
+    if (!el || this.ro) return;
+    this.ro = new ResizeObserver((entries) => {
+      for (const e of entries) this.viewportW.set(e.contentRect.width);
+    });
+    this.ro.observe(el);
+    this.viewportW.set(el.clientWidth);
   }
 
   stanceOf(f: FighterRuntime): string {

@@ -3,7 +3,7 @@
 Your repo's Pages settings publish the **`gh-pages` branch**, so deployment just needs the built app pushed there. Two wired-up paths:
 
 ## Option A — CI (recommended)
-`.github/workflows/deploy.yml` runs on every push to `main`:
+`.github/workflows/deploy-gh-pages.yml` runs on every push to `main`:
 1. `npm ci` → lint → unit tests
 2. `ng build --base-href /<repo>/` (correct base href for project pages, derived from `GITHUB_REPOSITORY`)
 3. Copies `index.html` → `404.html` so SPA deep links (`/arena`) work on Pages
