@@ -28,7 +28,7 @@ const SPRITE_HEIGHT = 170; // px height of every fighter figure on stage
   template: `
     <div
       class="fighter"
-      [class]="'fighter stance-' + stance() + ' facing-' + facing()"
+      [class]="'fighter character-' + characterId() + ' stance-' + stance() + ' facing-' + facing()"
       [attr.data-phase]="phase()"
       [style.left.px]="x()"
       [style.bottom.px]="y()"
@@ -63,6 +63,7 @@ const SPRITE_HEIGHT = 170; // px height of every fighter figure on stage
   `,
 })
 export class Fighter {
+  readonly characterId = input.required<string>();
   readonly x = input.required<number>();
   readonly y = input.required<number>();
   readonly facing = input<'left' | 'right'>('right');
