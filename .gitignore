@@ -1,3 +1,7 @@
 .angular/cache/
 playwright-report/
 test-results/
+node_modules
+.angular
+.claude
+.gh-workflow
