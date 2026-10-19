@@ -1,0 +1,114 @@
+/* Keyframes for the separated animated parts. Rotations happen around each
+ * layer's recorded shoulder pivot (transform-origin set in fighter.scss). */
+
+@keyframes fig-bob {
+  0%,
+  100% {
+    margin-bottom: 0;
+  }
+
+  50% {
+    margin-bottom: 6px;
+  }
+}
+
+@keyframes fig-shake {
+  0% {
+    margin-left: 0;
+  }
+
+  25% {
+    margin-left: -5px;
+  }
+
+  75% {
+    margin-left: 5px;
+  }
+
+  100% {
+    margin-left: 0;
+  }
+}
+
+@keyframes fig-cheer {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes fig-flash {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+/* idle / walk: relaxed arm sway around the shoulder */
+@keyframes arm-sway {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(4deg);
+  }
+}
+
+/* attack startup: cock the arm back */
+@keyframes arm-windup {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(-38deg) translateY(-4px);
+  }
+}
+
+/* attack active: launch forward with a stretch (the nun throws her cucumis,
+ * the knight lunges his sword) */
+@keyframes arm-launch {
+  0% {
+    transform: rotate(-38deg) translateY(-4px);
+  }
+
+  35% {
+    transform: rotate(30deg) scale(1.28, 1.06) translateX(10px);
+  }
+
+  100% {
+    transform: rotate(16deg) scaleX(1.1);
+  }
+}
+
+/* attack recovery: settle back to rest */
+@keyframes arm-recover {
+  0% {
+    transform: rotate(16deg) scaleX(1.1);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+/* victory: pump the arm */
+@keyframes arm-cheer {
+  0%,
+  100% {
+    transform: rotate(-10deg);
+  }
+
+  50% {
+    transform: rotate(-42deg);
+  }
+}

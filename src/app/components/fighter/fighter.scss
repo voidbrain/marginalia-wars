@@ -1,3 +1,15 @@
+@use './parts/frames' as fx;
+
+/* Shared shadow for every figure layer (single-sprite path and rigs). */
+$fig-shadow: drop-shadow(3px 6px 4px rgba(40, 20, 5, 0.45));
+
+@mixin figbase {
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: $fig-shadow;
+}
+
 :host {
   position: absolute;
   top: 0;
@@ -11,54 +23,117 @@
   position: absolute;
   transform: translateX(-50%);
   transition: filter 80ms linear;
-
-  .sprite {
-    display: block;
-    height: 170px;
-    width: auto;
-    user-select: none;
-    -webkit-user-drag: none;
-    image-rendering: auto;
-    filter: drop-shadow(3px 6px 4px rgba(40, 20, 5, 0.45));
-  }
 }
 
-.facing-left .sprite {
-  transform: scaleX(-1);
+/* ---- legacy single-key-art path (jester / rabbit / fallbacks) ---- */
+.sprite {
+  @include figbase;
+  height: 170px;
+  width: auto;
 }
 
-/* Stance flavour — cheap procedural "animation" on a single key art. */
-.stance-idle .sprite {
-  animation: bob 900ms ease-in-out infinite;
+/* ---- layered contour-cut rig (knight / nun): body + separated arm ----
+ * Both layers share one fixed canvas size, so they stack pixel-perfectly.
+ * --layer-h/-ar/--foot-off are set inline from frames.ts rigVarsOf(); the
+ * bottom-anchored margin box keeps the feet line on the ground while the
+ * transparent canvas margin falls below it. */
+.rig {
+  position: relative;
+  height: var(--layer-h);
+  width: calc(var(--layer-h) * var(--layer-ar, 1));
+  margin-bottom: calc(-1 * var(--foot-off, 0px));
 }
 
-.stance-walk .sprite {
-  animation: bob 380ms ease-in-out infinite;
+.layer {
+  @include figbase;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.arm {
+  /* rotate/stretch around the shoulder pivot recorded in frames.ts */
+  transform-origin: var(--ax, 50%) var(--ay, 50%);
+  will-change: transform;
+}
+
+/* Arm animation state machine — phase comes from engine frame data via
+ * [attr(data-phase)] on .fighter (windup|launch|recover), stance otherwise. */
+.rig .arm {
+  animation: fx["armSway"] 900ms ease-in-out infinite;
+}
+
+.stance-walk .rig .arm {
+  animation-duration: 380ms;
+}
+
+.stance-block .rig .arm {
+  transform: rotate(-12deg);
+  animation: none;
+}
+
+.stance-crouch .rig .arm {
+  transform: rotate(8deg) translateY(6px);
+  animation: none;
+}
+
+.stance-jump .rig .arm {
+  transform: rotate(-24deg);
+  animation: none;
+}
+
+[data-phase='windup'] .rig .arm {
+  animation: fx["armWindup"] 100ms ease-out forwards;
+}
+
+[data-phase='launch'] .rig .arm {
+  animation: fx["armLaunch"] 120ms cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+}
+
+[data-phase='recover'] .rig .arm {
+  animation: fx["armRecover"] 220ms ease-in forwards;
+}
+
+.stance-victory .rig .arm {
+  animation: fx["armCheer"] 600ms ease-in-out infinite;
+}
+
+.stance-ko .rig .arm {
+  opacity: 0.9;
+  animation: none;
+}
+
+/* ---- whole-figure stance flavour (applies to both paths) ----
+ * A class selector (.sprite/.rig) always beats the bare facing-left rule,
+ * so combined transforms are written out explicitly where needed. */
+.stance-idle .sprite,
+.stance-idle .rig {
+  animation: fig-bob 900ms ease-in-out infinite;
+}
+
+.stance-walk .sprite,
+.stance-walk .rig {
+  animation: fig-bob 380ms ease-in-out infinite;
 }
 
 .stance-jump .sprite {
   transform: translateY(-8px) rotate(-3deg);
 }
 
-.facing-left.stance-jump .sprite {
-  transform: scaleX(-1) translateY(-8px) rotate(3deg);
-}
-
 .stance-crouch .sprite {
   transform: translateY(14px) scaleY(0.9);
 }
 
-.facing-left.stance-crouch .sprite {
-  transform: scaleX(-1) translateY(14px) scaleY(0.9);
-}
-
 .stance-block .sprite {
-  filter: drop-shadow(0 0 6px #cfd8ff) drop-shadow(3px 6px 4px rgba(40, 20, 5, 0.45));
+  filter: drop-shadow(0 0 6px #cfd8ff) $fig-shadow;
 }
 
-.stance-hit .sprite {
-  animation: shake 140ms linear infinite;
-  filter: brightness(1.35) saturate(0.6) drop-shadow(3px 6px 4px rgba(40, 20, 5, 0.45));
+.stance-hit .sprite,
+.stance-hit .rig {
+  animation: fig-shake 140ms linear infinite;
+  filter: brightness(1.35) saturate(0.6);
 }
 
 .stance-attack .sprite,
@@ -66,82 +141,49 @@
 .stance-mercy .sprite {
   transform: translateY(-4px) rotate(4deg) scale(1.04);
 }
-
-.facing-left.stance-attack .sprite,
-.facing-left.stance-special .sprite,
-.facing-left.stance-mercy .sprite {
-  transform: scaleX(-1) translateY(-4px) rotate(-4deg) scale(1.04);
-}
-
 .stance-special .sprite {
-  filter: drop-shadow(0 0 10px #e7c25a) drop-shadow(3px 6px 4px rgba(40, 20, 5, 0.45));
+  filter: drop-shadow(0 0 10px #e7c25a) $fig-shadow;
 }
 
 .stance-mercy .sprite {
-  filter: drop-shadow(0 0 14px #b13a2e) drop-shadow(3px 6px 4px rgba(40, 20, 5, 0.45));
+  filter: drop-shadow(0 0 14px #b13a2e) $fig-shadow;
 }
 
 .stance-victory .sprite {
-  animation: cheer 600ms ease-in-out infinite;
+  animation: fig-cheer 600ms ease-in-out infinite;
 }
 
 .stance-ko .sprite {
   transform: rotate(84deg) translateY(26px);
   opacity: 0.85;
-  filter: grayscale(0.6) drop-shadow(3px 6px 4px rgba(40, 20, 5, 0.45));
+  filter: grayscale(0.6) $fig-shadow;
 }
 
-.facing-left.stance-ko .sprite {
-  transform: scaleX(-1) rotate(84deg) translateY(26px);
+/* The rig leans with the body while attacking; the arm animates separately. */
+.stance-attack .rig,
+.stance-special .rig,
+.stance-mercy .rig {
+  transform: translateY(-2px) rotate(2deg);
+}
+
+.stance-victory .rig {
+  animation: fig-cheer 600ms ease-in-out infinite;
+}
+
+.stance-ko .rig {
+  transform: rotate(84deg) translateY(26px);
+  opacity: 0.85;
+  filter: grayscale(0.6);
+}
+
+.facing-left .arm {
+  /* keep the pivot correct under the mirrored rig box */
+  transform-origin: calc(100% - var(--ax, 50%)) var(--ay, 50%);
 }
 
 .hit-flash {
   position: absolute;
   inset: -6px;
   background: radial-gradient(circle, rgba(255, 240, 200, 0.85), transparent 70%);
-  animation: flash 160ms ease-out forwards;
-}
-
-@keyframes bob {
-  0%,
-  100% {
-    margin-bottom: 0;
-  }
-  50% {
-    margin-bottom: 6px;
-  }
-}
-
-@keyframes shake {
-  0% {
-    margin-left: 0;
-  }
-  25% {
-    margin-left: -5px;
-  }
-  75% {
-    margin-left: 5px;
-  }
-  100% {
-    margin-left: 0;
-  }
-}
-
-@keyframes cheer {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-12px);
-  }
-}
-
-@keyframes flash {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
+  animation: fig-flash 160ms ease-out forwards;
 }
