@@ -22,6 +22,7 @@ import {
 } from '../../domain/combat/combat-engine';
 import { FighterRuntime } from '../../domain/combat/combat.types';
 import { CharacterDef } from '../../domain/characters/character.types';
+import { armPhaseOf, partsFor } from '../../domain/characters/parts/frames';
 import { Fighter } from '../../components/fighter/fighter';
 import { Hud } from '../../components/hud/hud';
 import { Stage } from '../../components/stage/stage';
@@ -86,6 +87,8 @@ const ROUND_SECONDS = 60;
             [facing]="s.p1.facing"
             [stance]="stanceOf(s.p1)"
             [sprite]="spriteFor(p1Char())"
+            [parts]="partsFor(s.p1.fighterId)"
+            [phase]="movePhase(s.p1)"
             [name]="p1Char()?.name ?? 'p1'"
             side="p1"
             [hitFlash]="justHit(s.p1, s)"
@@ -96,6 +99,8 @@ const ROUND_SECONDS = 60;
             [facing]="s.p2.facing"
             [stance]="stanceOf(s.p2)"
             [sprite]="spriteFor(p2Char())"
+            [parts]="partsFor(s.p2.fighterId)"
+            [phase]="movePhase(s.p2)"
             [name]="p2Char()?.name ?? 'p2'"
             side="p2"
             [hitFlash]="justHit(s.p2, s)"
@@ -351,8 +356,24 @@ export class ArenaPage {
     this.viewportW.set(el.clientWidth);
   }
 
+  /** Layered part art for a fighter id (knight/nun/jester/rabbit); null = fallback img. */
+  partsFor(fighterId: string) {
+    return partsFor(fighterId);
+  }
+
   stanceOf(f: FighterRuntime): string {
     return f.blocking ? 'block' : f.stance;
+  }
+
+  /**
+   * Arm animation phase for the layered rig, derived from the active move's
+   * frame data (startup -> windup, active -> launch, recovery -> recover).
+   * Null when idle — the arm then runs its relaxed sway loop.
+   */
+  movePhase(f: FighterRuntime): string | null {
+    const stance = this.stanceOf(f);
+    const t = f.currentMove?.timing;
+    return armPhaseOf(stance, f.moveElapsedMs, t?.startupMs ?? 0, t?.activeMs ?? 0);
   }
 
   hpPct(f: FighterRuntime): number {

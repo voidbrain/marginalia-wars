@@ -1,7 +1,4 @@
-.angular/cache/
-playwright-report/
-test-results/
-node_modules
-.angular
-.claude
-.gh-workflow
+__pycache__/
+*.pyc
+.angular/
+dist/
