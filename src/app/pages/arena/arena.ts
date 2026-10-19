@@ -82,6 +82,7 @@ const ROUND_SECONDS = 60;
           }
 
           <app-fighter
+            [characterId]="s.p1.fighterId"
             [x]="fighterPx(s.p1)"
             [y]="fighterPy(s.p1)"
             [facing]="s.p1.facing"
@@ -94,6 +95,7 @@ const ROUND_SECONDS = 60;
             [hitFlash]="justHit(s.p1, s)"
           />
           <app-fighter
+            [characterId]="s.p2.fighterId"
             [x]="fighterPx(s.p2)"
             [y]="fighterPy(s.p2)"
             [facing]="s.p2.facing"
