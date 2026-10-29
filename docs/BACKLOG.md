@@ -324,7 +324,7 @@ Each item has a compact summary, followed by its human-action line (icon first: 
 
 | Field | Value |
 |---|---|
-| PR / evidence | — |
+| PR / evidence | [#11](https://github.com/voidbrain/marginalia-wars/pull/11) |
 | Opened | 2026-10-29 |
 | Verification | Script: `check:freshness` (harness on v1.3.0), `check:backlog`, 2026-10-29. CI: Pending |
 | Reviewed | 2026-10-29 |
