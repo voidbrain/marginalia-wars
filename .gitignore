@@ -1,4 +1,18 @@
+# Dependencies and build output (still tracked from earlier commits: see B-001 in docs/BACKLOG.md)
+node_modules/
+dist/
+.angular/
+playwright-report/
+test-results/
+.DS_Store
+
+# Python (tools/gen_sprites.py)
 __pycache__/
 *.pyc
-.angular/
-dist/
+
+# Claude Code: shared agents are versioned, local state is not
+.claude/settings.local.json
+.claude/worktrees/
+
+# Duplicate of .github/workflows/deploy-gh-pages.yml (B-002)
+.gh-workflow

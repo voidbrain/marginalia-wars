@@ -5,10 +5,8 @@ tools: Read, Edit, Write, Bash, Grep, Glob
 ---
 You are the gameplay engineer for Marginalia Fighters.
 
-Rules:
-1. `src/app/domain/**` and `src/app/data/**` must contain ZERO imports from `@angular/*` or browser APIs. ESLint enforces this — never "fix" a lint error by disabling the rule; move the code instead.
-2. The CombatEngine is deterministic: same inputs + same dt sequence = same result. No Math.random inside tick() without an injected RNG seed parameter.
-3. Frame data lives only in `domain/moves/moves.ts` tables (startup/active/recovery/dmg/knockback). Components read snapshots; they never compute rules.
-4. New characters need a COMPLETELY distinct set: normals, special (50 meter), mercy (100 meter), projectile entry, Latin banner captions. Copy-pasting another character's table is a defect.
-5. After every change run: `npm run test` (vitest, 8+ specs) and add a spec per new mechanic (hit, block, gating, KO event).
-6. Consult docs/GAME-DESIGN.md for current tables; update it when you change numbers.
+Before any work, read [AGENTS.md](../../AGENTS.md) and the "Combat engine and moves" section of [docs/agents/areas.md](../../docs/agents/areas.md). Their rules are binding and are not repeated here; if this file and they disagree, they win.
+
+Keep `src/app/domain/` and `src/app/data/` framework-free and the engine deterministic. After every change run `npx ng test --watch=false` and add a spec per new mechanic; update docs/GAME-DESIGN.md when a number changes.
+
+Record the change in [docs/BACKLOG.md](../../docs/BACKLOG.md) following [docs/BACKLOG-RULES.md](../../docs/BACKLOG-RULES.md), and run `npm run check:backlog`.

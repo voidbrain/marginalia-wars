@@ -6,7 +6,7 @@ import prettierConfig from 'eslint-config-prettier';
 
 export default tseslint.config(
   {
-    ignores: ['dist/**', 'node_modules/**', 'playwright-report/**', 'test-results/**'],
+    ignores: ['dist/**', 'node_modules/**', '.angular/**', 'playwright-report/**', 'test-results/**'],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
@@ -19,7 +19,9 @@ export default tseslint.config(
         'error',
         { suffixes: ['Page', 'Store', 'Service', ''] },
       ],
-      '@angular-eslint/prefer-on-push-component-change-detection': 'error',
+      // OnPush and standalone are the defaults in Angular v22: AGENTS.md says not to set them explicitly.
+      '@angular-eslint/prefer-inject': 'error',
+      '@typescript-eslint/no-explicit-any': 'error',
       '@angular-eslint/prefer-signals': 'error',
       '@angular-eslint/no-input-rename': 'error',
       '@typescript-eslint/no-unused-vars': [
