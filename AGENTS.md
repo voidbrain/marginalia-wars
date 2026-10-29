@@ -106,7 +106,7 @@ npm run e2e               # Playwright: navigation and combat (starts ng serve o
 ```
 
 - `check:conventions` reports problems in code written before the harness (B-003); CI shows them without blocking until that record closes. Do not add new ones.
-- A test that fails because the code changed is stale: fix the test deliberately and say why.
+- A failing test is evidence until shown otherwise: check it against the intended behaviour. Change its expectation only when the requirement deliberately changed, and say which requirement; otherwise fix the code (B-008: a "flaky" attack spec was a real input bug).
 - Do not leave dead code behind when replacing a feature: its state, helpers, sprites and tests go too.
 
 ### Testing the joins
@@ -140,7 +140,7 @@ Before changing an area, read its section in [docs/agents/areas.md](docs/agents/
 **At the start of every session, before other work, run `npm run check:freshness`** and do what it lists, in the session's first PR:
 - the backlog is behind `main`: read the CI of the PRs merged since (`npm run ci:status -- <numbers>`), update or close their records, archive closed ones, move the header to the current `main`;
 - merged branches are still on GitHub: delete them (and their local branches and worktrees);
-- the newest audit in `docs/audits/` is more than 7 days old: audit what changed since (docs, tests, style guide and art, accessibility, privacy such as metadata in images) and write `docs/audits/<date>.md`;
+- the newest audit in `docs/audits/` is older than `freshness.auditDays` in `.harness.json` (7 by default): audit what changed since (docs, tests, style guide and art, accessibility, privacy such as metadata in images) and write `docs/audits/<date>.md`;
 - the harness template has a newer release (`.harness.json` names the one this project is on), or its clone is missing, behind or unreachable: pull it first (`git -C ~/Projects/project-harness pull --ff-only --tags`), reconcile as its `APPLY.md` ("Reconciling") says, then move `version` forward. A copied tool under `tools/` is never edited here unless it is listed under `forked` in `.harness.json`, where its settings are too (the framework-free folders for `check:conventions`, the CI workflow for `ci:status`).
 
 CI prints the same as warnings on every PR (it never blocks). `ci:status` needs a logged-in `gh`; if it is not, say so instead of skipping the step.
