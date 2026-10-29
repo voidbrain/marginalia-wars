@@ -130,7 +130,7 @@ Each item has a compact summary, followed by its human-action line (icon first: 
 
 | Field | Value |
 |---|---|
-| PR / evidence | Documentation PR `docs/merge-art-direction` (link when opened) |
+| PR / evidence | [#9](https://github.com/voidbrain/marginalia-wars/pull/9) |
 | Opened | 2026-10-29 |
 | Verification | Documentation: every rule in GAME-DESIGN checked against `combat-engine.ts`, `moves.ts`, `character.types.ts`, `arena.ts`, `game.store.ts`, `cpu.service.ts` and the specs, 2026-10-29 |
 | Reviewed | 2026-10-29 |
@@ -178,7 +178,7 @@ Each item has a compact summary, followed by its human-action line (icon first: 
 
 | Field | Value |
 |---|---|
-| PR / evidence | Art direction merged into docs/STYLE-GUIDE.md: `docs/merge-art-direction` |
+| PR / evidence | Art direction merged into docs/STYLE-GUIDE.md: [#9](https://github.com/voidbrain/marginalia-wars/pull/9) |
 | Opened | 2026-10-29 |
 | Verification | Pending |
 | Reviewed | 2026-10-29 |
@@ -348,7 +348,7 @@ Each item has a compact summary, followed by its human-action line (icon first: 
 
 | Field | Value |
 |---|---|
-| PR / evidence | Branch `docs/merge-art-direction` (link when opened) |
+| PR / evidence | [#9](https://github.com/voidbrain/marginalia-wars/pull/9) |
 | Opened | 2026-10-29 |
 | Verification | Documentation: `check:backlog`, `check:freshness` (harness on v1.1.1), `check:conventions` (same 11 as B-003), lint, local links, 2026-10-29. CI: Pending |
 | Reviewed | 2026-10-29 |
