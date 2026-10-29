@@ -178,7 +178,7 @@ Each item has a compact summary, followed by its human-action line (icon first: 
 
 | Field | Value |
 |---|---|
-| PR / evidence | [#8 CI](https://github.com/voidbrain/marginalia-wars/actions/runs/40866124177): `check` success, `e2e` failure |
+| PR / evidence | [#8 CI](https://github.com/voidbrain/marginalia-wars/actions/runs/40866124177): `check` success, `e2e` failure; fix [#12](https://github.com/voidbrain/marginalia-wars/pull/12) |
 | Opened | 2026-10-29 |
 | Verification | Browser: whole suite 3× with no retries, 27/27, 2026-10-29. CI: Pending |
 | Reviewed | 2026-10-29 |
@@ -324,7 +324,7 @@ Each item has a compact summary, followed by its human-action line (icon first: 
 
 | Field | Value |
 |---|---|
-| PR / evidence | — |
+| PR / evidence | [#12](https://github.com/voidbrain/marginalia-wars/pull/12) |
 | Opened | 2026-10-29 |
 | Verification | Script: `check:freshness` (harness on v1.4.0), `check:backlog`, 2026-10-29. CI: Pending |
 | Reviewed | 2026-10-29 |
