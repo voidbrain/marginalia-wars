@@ -12,7 +12,7 @@ Owner: `gameplay-engineer`.
 - Frame data lives only in the move tables: `MoveTiming` startup / active / recovery in milliseconds, damage, knockback, hitstun, meter gain and cost, hitbox, projectile. Components read snapshots; they never compute rules.
 - Every fighter has a distinct set: normals, special (50 meter), mercy (100 meter), projectile entry and Latin banner captions. Shared builders (`LIGHT_PUNCH` and friends) are fine for the plumbing; the resulting moves must still differ per fighter.
 - Each new mechanic gets a spec in `combat-engine.spec.ts` (hit, block, meter gating, KO event). Run `npx ng test --watch=false`.
-- [docs/GAME-DESIGN.md](../GAME-DESIGN.md) documents the current tables; update it when you change a number (it has drifted from the code: B-005).
+- [docs/GAME-DESIGN.md](../GAME-DESIGN.md) describes the rules and names where each number lives; it holds no numbers. A change to a rule (blocking, meter, rounds, events) updates it; a change to a number does not.
 
 ## Angular UI
 
@@ -30,7 +30,7 @@ Owner: `frontend-angular`.
 
 Owner: `artist-assets`.
 
-- Style contract: [docs/ART-DIRECTION.md](../ART-DIRECTION.md) and the [style guide](../STYLE-GUIDE.md). Aged parchment, wobbly ink outlines, flat fills, rubric red and gold-leaf accents, comedic violence as decoration. No photorealism, neon or smooth gradients.
+- Style contract: the [style guide](../STYLE-GUIDE.md), Art direction and Visual foundations. Aged parchment, wobbly ink outlines, flat fills, rubric red and gold-leaf accents, comedic violence as decoration. No photorealism, neon or smooth gradients.
 - Folders: `public/assets/references/` (source references, kept for provenance), `sprites/` (characters, props, specials, FX), `backgrounds/` (960×540 JPG stages).
 - Two pipelines exist side by side: `tools/gen_sprites.py` (PIL, writes contour-cut PNGs: `<char>-idle`, `-body`, `-arm`, `-attack`, `-full`) and hand-made SVG rigs (`<char>-body.svg`, `<char>-arm.svg`) that `parts/frames.ts` uses. Which one is canonical is undecided (F-002); do not delete either set until it is.
 - Rig layers share one full canvas (240×260) so they align; the arm rotates around the shoulder pivot in `frames.ts`. Changing the canvas or the pivot changes both the art and the frame data together.
@@ -52,5 +52,5 @@ Owner: `e2e-qa`.
 ## Build and deploy
 
 - `.github/workflows/ci.yml` (name `CI`) runs on every pull request: harness checks, lint, unit tests, type check, build, then Playwright.
-- `.github/workflows/deploy-gh-pages.yml` deploys on every push to `main` (lint, unit tests, build, `404.html` copy, `.nojekyll`, push to `gh-pages`). `deploy.yml` is an identical second copy and `.gh-workflow/` a third (B-002). See [docs/DEPLOYMENT.md](../DEPLOYMENT.md).
+- `.github/workflows/deploy-gh-pages.yml` deploys on every push to `main` (lint, unit tests, build, `404.html` copy, `.nojekyll`, push to `gh-pages`). `deploy.yml` is an identical second copy and `.gh-workflow/` a third (B-002). See the README, [Deploying to GitHub Pages](../../README.md#-deploying-to-github-pages).
 - Dependencies and build output are tracked in git (B-001); never commit changes under `node_modules/`, `dist/` or `.angular/`.

@@ -1,6 +1,6 @@
 # Marginalia Fighters backlog
 
-Current work ledger, reviewed 29 October 2026 against main `1ba72ac5` (merged #7). Records opened on that date come from the [baseline audit](audits/2026-10-29.md) made when the agent harness was added. Closed items and their PR history move to [the archive](archive/README.md). IDs are stable: do not reuse them.
+Current work ledger, reviewed 29 October 2026 against main `8f3a132d` (merged #8; its CI read with `ci:status`). Records opened on that date come from the [baseline audit](audits/2026-10-29.md) made when the agent harness was added. Closed items and their PR history are in [the archive](archive/backlog-2026-10-29.md). IDs are stable: do not reuse them.
 
 ## How to use this file
 
@@ -51,7 +51,7 @@ Each item has a compact summary, followed by its human-action line (icon first: 
 
 💻 **→ Human action required: No**<br />Delete the duplicate deploy workflow and the `.gh-workflow/` copy.
 
-**Next action / closure evidence:** `.github/workflows/deploy.yml` and `.github/workflows/deploy-gh-pages.yml` are identical (same name, both on push to `main`, same `pages` concurrency group), so each push queues two deploys to `gh-pages`; `.gh-workflow/deploy-gh-pages.yml` is a third, unused copy. Next: keep `deploy-gh-pages.yml` (the one docs/DEPLOYMENT.md names), delete the other two, check the next push runs one deploy. Closes on one deploy run per push.
+**Next action / closure evidence:** `.github/workflows/deploy.yml` and `.github/workflows/deploy-gh-pages.yml` are identical (same name, both on push to `main`, same `pages` concurrency group), so each push queues two deploys to `gh-pages`; `.gh-workflow/deploy-gh-pages.yml` is a third, unused copy. Next: keep `deploy-gh-pages.yml` (the one the README's Deploying section names), delete the other two, check the next push runs one deploy. Closes on one deploy run per push.
 
 <details>
 <summary>PR history, dates and verification</summary>
@@ -119,20 +119,20 @@ Each item has a compact summary, followed by its human-action line (icon first: 
 
 | Signal | ID | Priority | Status | Item |
 |:---:|---|---|---|---|
-| 🔴 | B-005 | 🔶 P2 | Open | GAME-DESIGN tables disagree with the move tables |
+| 🟢 | B-005 | 🔶 P2 | Verified | GAME-DESIGN tables disagree with the move tables |
 
-💻 **→ Human action required: No**<br />Regenerate the GAME-DESIGN tables from `domain/moves/moves.ts`.
+💻 **→ Human action required: No**<br />Close and archive once the documentation PR merges.
 
-**Next action / closure evidence:** docs/GAME-DESIGN.md lists frame data in 60 fps frames with its own move names and damage (for example Cooperus "Spear Jab (F) 6/4/8, 6 dmg"); the code uses milliseconds from shared builders (`rabbit-poke` "Spear Poke", `LIGHT_PUNCH` 90/80/140 ms, 6 dmg). Next: rewrite the tables from the code in milliseconds, or add a small script that prints them, and note the unit. Closes when every move in the code appears in the doc with matching numbers.
+**Next action / closure evidence:** Resolved by making the code the only source of numbers: docs/GAME-DESIGN.md now describes the rules and names where each number lives (`moves.ts`, `PROJECTILES`, the engine, the arena) and holds no frame data, so it cannot drift again. Its systems section was corrected against the code (blocked hits deal `ceil(damage × 0.15)`, specials and mercies are unblockable, meter +8 / +4 / +2, one round per fight, meter resets each fight). The README roster used Latin names that are not in the game (Cooperus, *Cuniculus Furibundus* …); it now shows the code's names. If the Latin names were the intent, that is a code change to `characters.data.ts` and `moves.ts`. Next: close and archive after the PR merges.
 
 <details>
 <summary>PR history, dates and verification</summary>
 
 | Field | Value |
 |---|---|
-| PR / evidence | — |
+| PR / evidence | [#9](https://github.com/voidbrain/marginalia-wars/pull/9) |
 | Opened | 2026-10-29 |
-| Verification | Pending |
+| Verification | Documentation: every rule in GAME-DESIGN checked against `combat-engine.ts`, `moves.ts`, `character.types.ts`, `arena.ts`, `game.store.ts`, `cpu.service.ts` and the specs, 2026-10-29 |
 | Reviewed | 2026-10-29 |
 
 </details>
@@ -167,18 +167,42 @@ Each item has a compact summary, followed by its human-action line (icon first: 
 
 | Signal | ID | Priority | Status | Item |
 |:---:|---|---|---|---|
-| 🔴 | B-007 | 🔹 P3 | Open | ART-DIRECTION palette and fonts disagree with the code |
+| 🔴 | B-007 | 🔹 P3 | Open | Former art-direction palette and fonts disagree with the code |
 
 🧑 **→ Human action required: Yes**<br />Decide whether the art doc or the shipped values are the intended look.
 
-**Next action / closure evidence:** docs/ART-DIRECTION.md gives parchment `#e8d9a8`, ink `#2b1b0e`, rubric red `#a52a1a`, gold `#c9a227` and Cormorant for body text; the code ships `#e2c98d`, `#2a1608`, `#7a1f16`, `#b8934f`, MedievalSharp body and UnifrakturCook rubrics, and does not load Cormorant. The style guide documents the shipped values. Next, after the decision: align the losing side and keep one palette table (the style guide), linked from ART-DIRECTION. Closes when the two documents and the code agree.
+**Next action / closure evidence:** The former docs/ART-DIRECTION.md (merged into the style guide on 2026-10-29) gave parchment `#e8d9a8`, ink `#2b1b0e`, rubric red `#a52a1a`, minium `#c8552a`, gold `#c9a227`, verdigris `#5b7553`, UnifrakturMaguntia display and Cormorant body; the code ships `#e2c98d`, `#2a1608`, `#7a1f16`, `#b8934f`, MedievalSharp body and UnifrakturCook rubrics, and does not load Cormorant. The style guide documents the shipped values and lists the former ones. Next, after the decision: change the tokens and fonts, or drop the former values from the style guide. Closes when the style guide holds one palette and it matches the code.
 
 <details>
 <summary>PR history, dates and verification</summary>
 
 | Field | Value |
 |---|---|
-| PR / evidence | — |
+| PR / evidence | Art direction merged into docs/STYLE-GUIDE.md: [#9](https://github.com/voidbrain/marginalia-wars/pull/9) |
+| Opened | 2026-10-29 |
+| Verification | Pending |
+| Reviewed | 2026-10-29 |
+
+</details>
+
+---
+
+### B-008
+
+| Signal | ID | Priority | Status | Item |
+|:---:|---|---|---|---|
+| 🔴 | B-008 | 🔺 P1 | Open | Two Playwright specs fail on main |
+
+💻 **→ Human action required: No**<br />Fix the two failing specs against the layered fighter rig and the hit detection.
+
+**Next action / closure evidence:** The first CI run of the browser suite ([run 40866124177](https://github.com/voidbrain/marginalia-wars/actions/runs/40866124177), PR #8) failed 2 of 9 specs, with retries: `combat.spec.ts` "light attacks damage the idle opponent" (P2 HP stays at 100 %, expected < 99) and `navigation.spec.ts` "walking moves p1 horizontally" (`getByTestId('fighter-p1').locator('.sprite')` matches 2 elements since the layered rig of #6 renders body and arm as `.sprite`). Next: locate the fighter by its host box (or `.sprite:not(.arm)`), and find whether light attacks no longer connect (hitbox versus the new rig offsets) or the spec's timing is stale; fix the cause and say which. Closes when the `e2e` job passes on a PR.
+
+<details>
+<summary>PR history, dates and verification</summary>
+
+| Field | Value |
+|---|---|
+| PR / evidence | [#8 CI](https://github.com/voidbrain/marginalia-wars/actions/runs/40866124177): `check` success, `e2e` failure |
 | Opened | 2026-10-29 |
 | Verification | Pending |
 | Reviewed | 2026-10-29 |
@@ -285,15 +309,15 @@ Each item has a compact summary, followed by its human-action line (icon first: 
 
 ---
 
-### F-005
+### F-006
 
 | Signal | ID | Priority | Status | Item |
 |:---:|---|---|---|---|
-| 🟡 | F-005 | 🔶 P2 | Implemented | Agent harness: AGENTS, backlog, style guide, checks |
+| 🔴 | F-006 | 🔹 P3 | Open | Best-of-3 rounds with meter carried over |
 
-💻 **→ Human action required: No**<br />Open the PR and reconcile this record with its first CI run.
+🧑 **→ Human action required: Yes**<br />Decide whether fights should be best-of-3 with meter carried between rounds.
 
-**Next action / closure evidence:** Added from the project harness (`~/Projects/project-harness`): AGENTS.md and CLAUDE.md, area notes, this backlog and its rules, the style guide, the baseline audit, `check:backlog`, `check:freshness`, `ci:status`, `check:conventions`, the `CI` workflow for pull requests; subagents and Copilot instructions now point to AGENTS; the ESLint rule requiring explicit OnPush was replaced. Next: open the PR, confirm the `CI` jobs run (conventions shows B-003 without blocking; unit tests and build depend on B-001 only locally). Closes when the PR merges with a green `check` job.
+**Next action / closure evidence:** The README promised "best-of-3 rounds, super-meter that carries between rounds", and the former GAME-DESIGN said the same; the game plays one round per fight (`GameStore.finishRound` goes to the result screen) and each fight starts a new engine with 0 meter. The docs now describe what ships. Next, if wanted: round flow in `GameStore` and the arena, meter carried into the next engine, HUD round label, specs. Closes when implemented and covered, or closed as not wanted.
 
 <details>
 <summary>PR history, dates and verification</summary>
@@ -302,7 +326,31 @@ Each item has a compact summary, followed by its human-action line (icon first: 
 |---|---|
 | PR / evidence | — |
 | Opened | 2026-10-29 |
-| Verification | Documentation: `check:backlog` and `check:freshness` run locally, 2026-10-29. CI: Pending |
+| Verification | Pending |
+| Reviewed | 2026-10-29 |
+
+</details>
+
+---
+
+### F-007
+
+| Signal | ID | Priority | Status | Item |
+|:---:|---|---|---|---|
+| 🟡 | F-007 | 🔹 P3 | Implemented | Docs consolidated; harness reconciled to template 1.1.0 |
+
+💻 **→ Human action required: No**<br />Open the PR and close this record when its `check` job passes.
+
+**Next action / closure evidence:** docs/ART-DIRECTION.md merged into docs/STYLE-GUIDE.md (concept, do and don't, fighters, stages; the former palette and fonts kept in B-007) and deleted; docs/DEPLOYMENT.md merged into the README ("Deploying to GitHub Pages") and deleted; docs/GAME-DESIGN.md rewritten as rules plus sources (B-005); README roster and round claims corrected (F-006); all links repointed. Harness: `.harness.json` stamp added and the project reconciled from template v1.0.0 to v1.1.1 with `check-harness` (copied `check-freshness`, `ci-status`; `check-conventions` conflict resolved by moving its folders into `.harness.json`; AGENTS and BACKLOG-RULES carry the new session-start step). Closes when the PR merges with a green `check` job.
+
+<details>
+<summary>PR history, dates and verification</summary>
+
+| Field | Value |
+|---|---|
+| PR / evidence | [#9](https://github.com/voidbrain/marginalia-wars/pull/9) |
+| Opened | 2026-10-29 |
+| Verification | Documentation: `check:backlog`, `check:freshness` (harness on v1.1.1), `check:conventions` (same 11 as B-003), lint, local links, 2026-10-29. CI: Pending |
 | Reviewed | 2026-10-29 |
 
 </details>

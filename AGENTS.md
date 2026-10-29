@@ -67,7 +67,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 ## Project conventions (Marginalia Fighters)
 
-The game is **Marginalia Fighters** (*Pugna ad Marginem*): a 2D fighting game set in the margins of medieval manuscripts. The repository is `voidbrain/marginalia-wars`, the Angular project `marginalia-fighters`, and the site lives at `https://voidbrain.github.io/marginalia-wars/` (the deploy workflow builds with `--base-href /<repo>/` and pushes `dist/marginalia-fighters/browser` to the `gh-pages` branch; see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)).
+The game is **Marginalia Fighters** (*Pugna ad Marginem*): a 2D fighting game set in the margins of medieval manuscripts. The repository is `voidbrain/marginalia-wars`, the Angular project `marginalia-fighters`, and the site lives at `https://voidbrain.github.io/marginalia-wars/` (the deploy workflow builds with `--base-href /<repo>/` and pushes `dist/marginalia-fighters/browser` to the `gh-pages` branch; see the README, "Deploying to GitHub Pages").
 
 ### Architecture
 
@@ -80,13 +80,13 @@ The game is **Marginalia Fighters** (*Pugna ad Marginem*): a 2D fighting game se
 
 ### Style guide
 
-- Before any UI change (templates, styles, user-facing text, sprites) read [docs/STYLE-GUIDE.md](docs/STYLE-GUIDE.md) and, for art, [docs/ART-DIRECTION.md](docs/ART-DIRECTION.md). Use the `var(--…)` tokens from `src/styles.scss`; a new colour is a new token, never a new literal.
+- Before any UI change (templates, styles, user-facing text, sprites) read [docs/STYLE-GUIDE.md](docs/STYLE-GUIDE.md) (look, voice and art direction). Use the `var(--…)` tokens from `src/styles.scss`; a new colour is a new token, never a new literal.
 - A new token, font or shared component updates the style guide in the same change.
 
 ### Adding things
 
-- **A fighter**: an entry in `data/characters.data.ts`, a move table in `domain/moves/moves.ts` with its own normals, special (50 meter), mercy (100 meter), projectile and Latin captions (copying another fighter's set is a defect), sprites in `public/assets/sprites/` (and a rig in `domain/characters/parts/frames.ts` if it has layered art), its rows in [docs/GAME-DESIGN.md](docs/GAME-DESIGN.md), and engine specs for its hit, block, meter gating and KO.
-- **A move or mechanic**: the rule in the engine or the move table, a spec in `combat-engine.spec.ts`, the number in GAME-DESIGN.
+- **A fighter**: an entry in `data/characters.data.ts`, a move table in `domain/moves/moves.ts` with its own normals, special (50 meter), mercy (100 meter), projectile and Latin captions (copying another fighter's set is a defect), sprites in `public/assets/sprites/` (and a rig in `domain/characters/parts/frames.ts` if it has layered art), its row in the fighters table of [docs/GAME-DESIGN.md](docs/GAME-DESIGN.md) and the README roster, and engine specs for its hit, block, meter gating and KO.
+- **A move or mechanic**: the rule in the engine or the numbers in the move table, a spec in `combat-engine.spec.ts`; a new or changed rule (not a number) is described in GAME-DESIGN.
 - **A stage**: `data/stages.data.ts` and a 960×540 background in `public/assets/backgrounds/`.
 - **An interactive element**: a stable `data-testid` (Playwright depends on them: `cpu-toggle`, `fight-btn`, `arena`, `hud`, `timer`, …).
 
@@ -140,7 +140,8 @@ Before changing an area, read its section in [docs/agents/areas.md](docs/agents/
 **At the start of every session, before other work, run `npm run check:freshness`** and do what it lists, in the session's first PR:
 - the backlog is behind `main`: read the CI of the PRs merged since (`npm run ci:status -- <numbers>`), update or close their records, archive closed ones, move the header to the current `main`;
 - merged branches are still on GitHub: delete them (and their local branches and worktrees);
-- the newest audit in `docs/audits/` is more than 7 days old: audit what changed since (docs, tests, style guide and art, accessibility, privacy such as metadata in images) and write `docs/audits/<date>.md`.
+- the newest audit in `docs/audits/` is more than 7 days old: audit what changed since (docs, tests, style guide and art, accessibility, privacy such as metadata in images) and write `docs/audits/<date>.md`;
+- the harness template has a newer release (`.harness.json` names the one this project is on): reconcile it as `~/Projects/project-harness/APPLY.md` ("Reconciling") says, then move `version` forward. A copied tool under `tools/` is never edited here: its settings are in `.harness.json` (the framework-free folders for `check:conventions`, the CI workflow for `ci:status`).
 
 CI prints the same as warnings on every PR (it never blocks). `ci:status` needs a logged-in `gh`; if it is not, say so instead of skipping the step.
 

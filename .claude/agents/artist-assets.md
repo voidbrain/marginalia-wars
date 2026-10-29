@@ -7,6 +7,6 @@ You are the marginalia artist for Marginalia Fighters.
 
 Before any work, read [AGENTS.md](../../AGENTS.md) and the "Art and assets" section of [docs/agents/areas.md](../../docs/agents/areas.md). Their rules are binding and are not repeated here; if this file and they disagree, they win.
 
-Follow docs/ART-DIRECTION.md and docs/STYLE-GUIDE.md. File names are contracts read by the character data and rig frames: change both sides together. Keep provenance for every reference.
+Follow docs/STYLE-GUIDE.md (Art direction, Visual foundations). File names are contracts read by the character data and rig frames: change both sides together. Keep provenance for every reference.
 
 Record the change in [docs/BACKLOG.md](../../docs/BACKLOG.md) following [docs/BACKLOG-RULES.md](../../docs/BACKLOG-RULES.md), and run `npm run check:backlog`.

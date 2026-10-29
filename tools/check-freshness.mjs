@@ -1,4 +1,4 @@
-// Is the backlog behind main, are merged branches left over, and is the last audit more than a week old? Prints what to do first (AGENTS: session
+// Is the backlog behind main, are merged branches left over, is the last audit more than a week old, and is the harness template newer? Prints what to do first (AGENTS: session
 // start). Never fails: with --github it prints GitHub warnings, so a PR shows them without being blocked.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
@@ -39,3 +39,7 @@ if (days > MAX_AUDIT_DAYS) warn(`The last audit (docs/audits/${last ?? 'none'}) 
 
 if (!notes.length) console.log(`Fresh: backlog reconciled against current main; last audit ${last} (${days} day(s) ago).`);
 for (const n of notes) console.log(github ? `::warning title=Backlog freshness::${n}` : `! ${n}`);
+
+// 4. the harness template this project was applied from (tools/check-harness.mjs; skipped without a local template)
+const harness = new URL('./check-harness.mjs', import.meta.url).pathname;
+if (existsSync(harness)) execFileSync(process.execPath, [harness, ...(github ? ['--github'] : [])], { stdio: 'inherit' });
