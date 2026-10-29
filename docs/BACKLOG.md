@@ -1,6 +1,6 @@
 # Marginalia Fighters backlog
 
-Current work ledger, reviewed 29 October 2026 against main `5647814c` (merged #10; its CI read with `ci:status`). Records opened on that date come from the [baseline audit](audits/2026-10-29.md) made when the agent harness was added. Closed items and their PR history are in [the archive](archive/backlog-2026-10-29.md). IDs are stable: do not reuse them.
+Current work ledger, reviewed 29 October 2026 against main `a326007f` (merged #11; its CI read with `ci:status`). Records opened on that date come from the [baseline audit](audits/2026-10-29.md) made when the agent harness was added. Closed items and their PR history are in [the archive](archive/backlog-2026-10-29.md). IDs are stable: do not reuse them.
 
 ## How to use this file
 
@@ -167,11 +167,11 @@ Each item has a compact summary, followed by its human-action line (icon first: 
 
 | Signal | ID | Priority | Status | Item |
 |:---:|---|---|---|---|
-| 🔴 | B-008 | 🔺 P1 | Open | Two Playwright specs fail on main |
+| 🟡 | B-008 | 🔺 P1 | Implemented | Two Playwright specs fail on main |
 
-💻 **→ Human action required: No**<br />Fix the two failing specs against the layered fighter rig and the hit detection.
+💻 **→ Human action required: No**<br />Close when the `e2e` job passes on this fix's PR.
 
-**Next action / closure evidence:** The first CI run of the browser suite ([run 40866124177](https://github.com/voidbrain/marginalia-wars/actions/runs/40866124177), PR #8) failed 2 of 9 specs, with retries: `combat.spec.ts` "light attacks damage the idle opponent" (P2 HP stays at 100 %, expected < 99) and `navigation.spec.ts` "walking moves p1 horizontally" (`getByTestId('fighter-p1').locator('.sprite')` matches 2 elements since the layered rig of #6 renders body and arm as `.sprite`). Next: locate the fighter by its host box (or `.sprite:not(.arm)`), and find whether light attacks no longer connect (hitbox versus the new rig offsets) or the spec's timing is stale; fix the cause and say which. On [#10](https://github.com/voidbrain/marginalia-wars/pull/10) ([run 40869707332](https://github.com/voidbrain/marginalia-wars/actions/runs/40869707332)) only "walking moves p1 horizontally" failed and the light-attack spec passed, so that one may be flaky rather than broken: run it repeatedly before changing it. Closes when the `e2e` job passes on a PR.
+**Next action / closure evidence:** The first CI run of the browser suite ([run 40866124177](https://github.com/voidbrain/marginalia-wars/actions/runs/40866124177), PR #8) failed 2 of 9 specs, with retries: `combat.spec.ts` "light attacks damage the idle opponent" (P2 HP stays at 100 %, expected < 99) and `navigation.spec.ts` "walking moves p1 horizontally" (`getByTestId('fighter-p1').locator('.sprite')` matches 2 elements since the layered rig of #6 renders body and arm as `.sprite`). Next: locate the fighter by its host box (or `.sprite:not(.arm)`), and find whether light attacks no longer connect (hitbox versus the new rig offsets) or the spec's timing is stale; fix the cause and say which. On [#10](https://github.com/voidbrain/marginalia-wars/pull/10) ([run 40869707332](https://github.com/voidbrain/marginalia-wars/actions/runs/40869707332)) only "walking moves p1 horizontally" failed and the light-attack spec passed, so that one may be flaky rather than broken: run it repeatedly before changing it. Closes when the `e2e` job passes on a PR. Fixed 2026-10-29: the walking spec reads the fighter's `left` (the engine x) instead of the rig's several `.sprite` layers; every spec waits for the intro's announcement to disappear instead of sleeping 1.8 s (the arena caps a frame at 50 ms, so on a slow runner game time lags wall time); Escape is pressed once the arena exists (on #11 it sometimes reached /select first). The light-attack failure was a real input bug: `InputService` sampled held keys once per frame, so a key pressed and released between two frames was lost (every Playwright `press`, and a fast tap on a slow frame); it now latches presses until the next snapshot. HUD HP bars have `hp-p1` / `hp-p2` hooks. Locally (fresh install outside the tracked `node_modules`): the light-attack spec failed 3 of 5 runs before the input fix; the whole suite then passed 27 of 27 runs with retries off.
 
 <details>
 <summary>PR history, dates and verification</summary>
@@ -180,7 +180,7 @@ Each item has a compact summary, followed by its human-action line (icon first: 
 |---|---|
 | PR / evidence | [#8 CI](https://github.com/voidbrain/marginalia-wars/actions/runs/40866124177): `check` success, `e2e` failure |
 | Opened | 2026-10-29 |
-| Verification | Pending |
+| Verification | Browser: whole suite 3× with no retries, 27/27, 2026-10-29. CI: Pending |
 | Reviewed | 2026-10-29 |
 
 </details>
@@ -309,24 +309,24 @@ Each item has a compact summary, followed by its human-action line (icon first: 
 
 ---
 
-### F-009
+### F-010
 
 | Signal | ID | Priority | Status | Item |
 |:---:|---|---|---|---|
-| 🟡 | F-009 | 🔹 P3 | Implemented | Harness reconciled to template 1.3.0 |
+| 🟡 | F-010 | 🔹 P3 | Implemented | Harness reconciled to template 1.4.0 |
 
 💻 **→ Human action required: No**<br />Close this record when its PR merges with a green `check` job.
 
-**Next action / closure evidence:** `check:freshness` listed template v1.3.0 at session start: the AGENTS Work-tracking bullet on harness changes asked from a project reconciled from `core/AGENTS.md` (no copied file changed); `.harness.json` moved to 1.3.0. The same PR reconciles the backlog with #10 (F-008 closed and archived; B-008 updated). Closes when the PR merges with a green `check` job, now a required check for auto-merge.
+**Next action / closure evidence:** `check:freshness` listed template v1.4.0 (project overrides): `tools/check-harness.mjs` copied (forked files, override markers), the AGENTS Work-tracking bullets reconciled from `core/AGENTS.md`, `.harness.json` on 1.4.0 with an empty `forked`. Closes when the PR merges with a green `check` job.
 
 <details>
 <summary>PR history, dates and verification</summary>
 
 | Field | Value |
 |---|---|
-| PR / evidence | [#11](https://github.com/voidbrain/marginalia-wars/pull/11) |
+| PR / evidence | — |
 | Opened | 2026-10-29 |
-| Verification | Script: `check:freshness` (harness on v1.3.0), `check:backlog`, 2026-10-29. CI: Pending |
+| Verification | Script: `check:freshness` (harness on v1.4.0), `check:backlog`, 2026-10-29. CI: Pending |
 | Reviewed | 2026-10-29 |
 
 </details>

@@ -15,7 +15,9 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
           <span class="name">{{ p1Name() }}</span>
           <span class="wins">{{ winPips(p1Wins()) }}</span>
         </div>
-        <div class="bar hp"><div class="fill" [style.width.%]="p1HpPct()"></div></div>
+        <div class="bar hp">
+          <div class="fill" data-testid="hp-p1" [style.width.%]="p1HpPct()"></div>
+        </div>
         <div class="bar meter"><div class="fill" [style.width.%]="p1MeterPct()"></div></div>
       </div>
 
@@ -29,7 +31,9 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
           <span class="wins">{{ winPips(p2Wins()) }}</span>
           <span class="name">{{ p2Name() }}</span>
         </div>
-        <div class="bar hp mirror"><div class="fill" [style.width.%]="p2HpPct()"></div></div>
+        <div class="bar hp mirror">
+          <div class="fill" data-testid="hp-p2" [style.width.%]="p2HpPct()"></div>
+        </div>
         <div class="bar meter mirror"><div class="fill" [style.width.%]="p2MeterPct()"></div></div>
       </div>
     </div>

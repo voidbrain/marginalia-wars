@@ -24,6 +24,8 @@ const KEY_MAP: Partial<Record<string, BindKey>> = {
 @Injectable({ providedIn: 'root' })
 export class InputService implements OnDestroy {
   readonly p1: InputState = emptyInput();
+  /** Keys pressed since the last snapshot: a tap released before the next frame still reads as held for one frame. */
+  private readonly tapped = new Set<BindKey>();
 
   private readonly boundKeyDown = (e: KeyboardEvent) => this.onKey(e, true);
   private readonly boundKeyUp = (e: KeyboardEvent) => this.onKey(e, false);
@@ -49,13 +51,18 @@ export class InputService implements OnDestroy {
     // Zoneless app: writes go straight into mutable state; the game loop
     // reads it once per animation frame, so no change-detection churn here.
     this.p1[bind] = down;
+    if (down) this.tapped.add(bind);
   }
 
   snapshotP1(): InputState {
-    return { ...this.p1 };
+    const snap = { ...this.p1 };
+    for (const bind of this.tapped) snap[bind] = true;
+    this.tapped.clear();
+    return snap;
   }
 
   reset(): void {
     Object.assign(this.p1, emptyInput());
+    this.tapped.clear();
   }
 }
