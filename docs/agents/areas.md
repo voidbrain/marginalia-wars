@@ -46,6 +46,7 @@ Owner: `e2e-qa`.
 - Locate by `data-testid`; if a hook is missing, add it to the component with a stable name rather than chaining CSS selectors.
 - Poll with `expect(...).toPass({ timeout })` or `waitForFunction`; never fixed sleeps before an assertion.
 - On a failure read the trace in `playwright-report/` before changing product code, and tell a flake (CPU shoving, intro timing) from a real bug.
+- Lesson (B-008): wait for the intro's `announce` to disappear, never a fixed 1.8 s (game time lags wall time on a slow runner); a Playwright `press` lands between two frames, so input must latch taps (`InputService`), and a spec that "flakes" on attacks may be a real input bug.
 - Unit specs in `src/app/domain/**/*.spec.ts` stay DOM-free.
 - There is no accessibility (axe) coverage yet (F-003).
 

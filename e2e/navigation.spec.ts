@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { enterFight, fighterX } from './fight';
 
 test.describe('Marginalia Fighters — navigation flow', () => {
   test('home page shows the incipit and roster', async ({ page }) => {
@@ -29,26 +30,12 @@ test.describe('Marginalia Fighters — navigation flow', () => {
   });
 
   test('walking moves p1 horizontally', async ({ page }) => {
-    await page.goto('/select');
-    // Turn the CPU off so p2 doesn't shove p1 back during the measurement.
-    await page.getByTestId('cpu-toggle').uncheck();
-    await page.getByTestId('fight-btn').click();
-    await expect(page.getByTestId('announce')).toHaveText('PUGNA!');
-    await page.waitForTimeout(1800); // let the intro pass — input is locked during it
-
-    // Measure engine position via the sprite's center-x (the wrapper div is a
-    // full-size overlay; only the inner sprite box tracks the fighter).
-    const centerX = async () => {
-      const b = await page.getByTestId('fighter-p1').locator('.sprite').boundingBox();
-      return b!.x + b!.width / 2;
-    };
-    const before = await centerX();
+    // CPU off so p2 doesn't shove p1 back during the measurement.
+    await enterFight(page, { cpu: false });
+    const before = await fighterX(page, 'p1');
     await page.keyboard.down('KeyD');
-    await page.waitForTimeout(900);
+    await expect.poll(() => fighterX(page, 'p1'), { timeout: 5000 }).toBeGreaterThan(before + 40);
     await page.keyboard.up('KeyD');
-    const after = await centerX();
-
-    expect(after).toBeGreaterThan(before + 40);
   });
 
   test('timer counts down during the round', async ({ page }) => {
@@ -56,14 +43,16 @@ test.describe('Marginalia Fighters — navigation flow', () => {
     await page.getByTestId('fight-btn').click();
     const timer = page.getByTestId('timer');
     const first = Number(await timer.textContent());
-    await page.waitForTimeout(2500);
-    const later = Number(await timer.textContent());
-    expect(later).toBeLessThan(first);
+    await expect
+      .poll(async () => Number(await timer.textContent()), { timeout: 10_000 })
+      .toBeLessThan(first);
   });
 
   test('escape returns to select screen', async ({ page }) => {
     await page.goto('/select');
     await page.getByTestId('fight-btn').click();
+    // The arena listens for Escape once it exists; a key pressed earlier lands on /select.
+    await expect(page.getByTestId('arena')).toBeVisible();
     await page.keyboard.press('Escape');
     await expect(page.getByTestId('select')).toBeVisible();
   });
