@@ -1,51 +1,42 @@
-# Game Design — frame data & systems
+# Game design
 
-All logic lives in `src/app/domain/` as plain TypeScript (no Angular imports; enforced by ESLint). The arena page runs a fixed-timestep-ish rAF loop: read inputs → `engine.tick(dt)` → push immutable snapshot into signals → presentational components render.
+How a fight works. The rules live in `src/app/domain/` as plain TypeScript (AGENTS, Architecture); this document describes them and names where each one is. The numbers live only in the code: read them there, and do not copy them here, so they cannot drift (they did: B-005).
 
-## Systems
-- **Rounds**: best of 3, 60 s timer, KO or time-out (higher HP% wins).
-- **Meter**: 0–100. Gain: dealing/taking damage, blocking, taunt. Special costs 50, Mercy costs 100. Meter carries across rounds.
-- **Blocking**: hold away-from-opponent; reduces damage ×0.25, no chip-death, builds block meter-gain.
-- **Projectiles**: table-driven arcs (`PROJECTILES` in `character.types.ts`) — cucumber (flat), turd (parabola), dragon (screen-crossing, fire trail), cavalry band (multi-hit sweep).
-- **Events**: engine emits `{type:'hit'|'block'|'ko'|'special'|'mercy'|'decapitation', ...}`; UI turns them into banners, splats, shake, sound hooks.
+| What | Source of truth |
+|---|---|
+| Move frame data (startup / active / recovery in **milliseconds**, damage, knockback, hitstun, meter gain and cost, hitbox, projectile) | `domain/moves/moves.ts` (shared builders such as `LIGHT_PUNCH` at the top, then one table per fighter) |
+| Projectiles (speed, arc, lifetime, sprite) | `PROJECTILES` in `domain/characters/character.types.ts` |
+| Roster (names, sprites, captions, quotes) | `data/characters.data.ts`; the player-facing summary is the README roster |
+| Stages | `data/stages.data.ts` |
+| Hit, block and meter rules | `CombatEngine` in `domain/combat/combat-engine.ts` |
+| Round timer and time-out | `ROUND_SECONDS` and the round-end check in `pages/arena/arena.ts` |
+| CPU behaviour | `services/cpu.service.ts` |
 
-## Move tables (frames @60fps: startup/active/recovery, dmg, knockback)
+## A fight
 
-### Cooperus (rabbit/snail) — slow mount, long reach
-| Move | S/A/R | Dmg | Notes |
+- **One round per fight**, 60 s. It ends on a KO or at time-out, where the higher HP percentage wins. The result screen follows; Rematch starts a new fight with the same picks. `GameStore` counts wins per side across rematches, and the HUD shows them as pips. Best-of-3 rounds is not implemented (F-006).
+- **Meter** runs 0–100 and starts at 0 every fight. A clean hit gives the attacker +8 and the victim +4; a blocked hit gives the attacker +2. Specials need and spend 50, mercies 100, both only on the ground.
+- **Blocking**: hold away from the opponent. A blocked hit deals `ceil(damage × 0.15)`, a short stun and 40 % knockback. Specials and mercies cannot be blocked.
+- **Hits** apply damage, hitstun and knockback, and spray blood (more for a mercy). A move flagged `launch` throws the victim up. A mercy that brings HP to 0 is a decapitation.
+- **Projectiles**: spear, cucumis, turd and rock, each with its own speed, arc and lifetime. The dragon, the cavalry charge and the lute are arena FX that play over a special or mercy; their damage comes from the move.
+- **Events** the engine emits for the UI: `hit`, `block`, `projectile-spawn`, `special-start` and `mercy-start` (with the banner caption and the FX to play), `decapitation`, `ko`, `round-end`. The arena turns them into banners, FX overlays, splats and shake, draining them once per frame.
+
+## Fighters
+
+Each fighter has a distinct set (AGENTS, Adding things): light and heavy normals, a projectile, a special at 50 meter and a mercy at 100, with Latin banner captions. Their identities (names as in the code; banner captions are `LATIN — gloss`):
+
+| Fighter | Play | Special (50) | Mercy (100) |
 |---|---|---|---|
-| Spear Jab (F) | 6/4/8 | 6 | pokes, cancels into walk |
-| Lance Thrust (G) | 12/6/16 | 14 | lunges 40px forward |
-| Snail Avalanche (H, 50) | 10/20/18 | 3×8 | shell rolls as low projectile |
-| Draco de Margine (J, 100) | 20/-/- | 5×10 | dragon crosses screen, burns |
+| **The Rabbit on the Snail** (*Domesticus Velox*) | slow mount, long spear reach, thrown lance | Snail Avalanche (*IN CURSU*) | Dragon of the Margin (*DRACO VENIT!*) |
+| **The Nun** (*Soror Impudica*) | zoner, cucumis throws | Convent Rebellion (*SORORES IN ARMA!*) | Assumption (*ASSUMPTA EST*) |
+| **The Knight** (*Miles Errans*) | armoured pressure, flaming rock | Cavalry Charge (*EQUITES VOLANT!*) | Minstrel Mercy (*MISEREERE*) |
+| **The Jester** (*Risus Delebat*) | erratic, dung volley | Rainbow Fart (*IRIS FOETENS*) | Off With Their Heads (*CAPUT REGIS!*), a decapitation |
 
-### Monialis Scandalosa (nun) — zoner
-| Move | S/A/R | Dmg | Notes |
-|---|---|---|---|
-| Cucumis Slap (F) | 5/3/7 | 5 | fast |
-| Vespers Smack (G) | 10/5/14 | 12 | |
-| Rebellia Monasterialis (H, 50) | 8/12/16 | 10 | throws volley of cucumises |
-| Assumptio Posterulae (J, 100) | 14/-/24 | 40 | "Ecce Posterula" heavy cheek hit + arc projectile |
+## CPU
 
-### Miles Irritus (knight) — pressure
-| Move | S/A/R | Dmg | Notes |
-|---|---|---|---|
-| Short Sword (F) | 6/4/9 | 7 | |
-| Estoc (G) | 11/6/15 | 15 | |
-| Cursus Equitum (H, 50) | 16/30/20 | 4×7 | knights ride L→R on clouds across full stage |
-| Misericordia Harpistae (J, 100) | 24/-/30 | 45 | kneels, plays lute; enemy collapses |
+`CpuService` emits the same `InputState` as the keyboard, so the engine cannot tell them apart. Per difficulty (easy, normal, hard) it changes how close it walks, how often it blocks an incoming attack, and how aggressive it is: spending meter on a mercy or special in range, throwing from mid range, otherwise mixing normals, and on normal and hard an occasional jump. It uses `Math.random()`; that is fine outside the engine.
 
-### Gelo (jester) — trickster
-| Move | S/A/R | Dmg | Notes |
-|---|---|---|---|
-| Bell Bonk (F) | 4/3/6 | 5 | fastest normals |
-| Marotte Swing (G) | 9/5/13 | 12 | hop-forward |
-| Crepitus Arcuatus (H, 50) | 8/14/14 | 3×6 | rainbow fart cloud, pushes back |
-| Caput Ablatum! (J, 100) | 12/8/26 | 50 | decapitation event → head sprite + splat |
+## Tests
 
-## AI (`services/cpu.service.ts`)
-Difficulty tiers emit the same `InputState` objects as the keyboard service: approach when far, random mix of normals in range, block probability vs incoming attacks/hitboxes, spend meter on special/mercy when available, occasional taunt (moral damage).
-
-## Testing strategy
-- **Vitest unit**: engine determinism — spawn/facing, walking, hit detection+meter, block reduction, meter gating (50/100), projectile travel, mercy KO events, round-over freeze. No DOM needed.
-- **Playwright e2e**: navigation (home→select→arena→result), CPU toggle (`data-testid="cpu-toggle"`), damage after jabs, banner appears on special, CPU fights back. Deterministic specs disable CPU and wait out the 1.6 s "PUGNA!" intro.
+- **Vitest** (`domain/combat/combat-engine.spec.ts`, no DOM): spawn and facing, walking, a melee hit with damage and events, block reduction, meter gating (50 / 100), a mercy projectile KO, projectile travel, and the freeze after the round ends.
+- **Playwright** (`e2e/`): home, select and fight navigation, walking, the timer, Escape back to select, damage after light attacks, the special's banner, the CPU fighting back. Deterministic specs turn the CPU off and wait out the 1.6 s *PUGNA!* intro. Two fail on `main` (B-008).

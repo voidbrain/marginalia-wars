@@ -1,9 +1,15 @@
 // CI evidence for the backlog: each pull request's CI jobs and, for failed or retried jobs, the tests involved.
 // Usage: npm run ci:status -- [PR numbers…]   (default: the 8 most recently updated PRs). Needs an authenticated gh.
 import {execFileSync} from 'node:child_process';
+import {existsSync, readFileSync} from 'node:fs';
 
-const WORKFLOW = 'CI'; // the pull-request workflow's `name:`
-const BROWSER_JOB = /e2e|browser/; // jobs whose Playwright log is scanned for failed and retried tests
+// Project settings in .harness.json (ciStatus): the pull-request workflow's `name:`, the jobs whose Playwright log is
+// scanned for failed and retried tests, and extra log lines worth printing (regular expressions).
+const stamp = new URL('../.harness.json', import.meta.url);
+const config = (existsSync(stamp) ? JSON.parse(readFileSync(stamp, 'utf8')).ciStatus : undefined) ?? {};
+const WORKFLOW = config.workflow ?? 'CI';
+const BROWSER_JOB = new RegExp(config.browserJobs ?? 'e2e|browser');
+const LOG_NOTES = (config.logNotes ?? []).map(pattern => new RegExp(pattern));
 
 const gh = (...args) => execFileSync('gh', args, {encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe']});
 const json = (...args) => JSON.parse(gh(...args));
@@ -31,6 +37,7 @@ for (const n of numbers) {
 
       const tests = log.filter(l => /^\s+✘ |\(retry #\d\)|^\s+\d+ (flaky|failed)/.test(l)).map(l => l.trim());
       for (const t of [...new Set(tests)]) console.log(`               ${t}`);
+      for (const note of log.filter(l => LOG_NOTES.some(p => p.test(l)))) console.log(`               ${note.trim()}`);
     }
   }
 }

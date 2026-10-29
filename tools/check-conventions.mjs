@@ -3,14 +3,12 @@ import {existsSync, readFileSync, readdirSync, statSync} from 'node:fs';
 import {createRequire} from 'node:module';
 import {join, relative} from 'node:path';
 
-// Framework-free folders (relative to the repo root) and the @angular/core names each may import. Signal primitives run
-// without the framework, so a folder may allow them and stay unit-testable. Empty list: no framework-free layer.
-const PURE_DIRS = [
-  ['src/app/domain/', []],
-  ['src/app/data/', []],
-];
-
 const root = new URL('..', import.meta.url).pathname;
+// Framework-free folders (relative to the repo root) and the @angular/core names each may import, from .harness.json
+// (conventions.pureDirs), e.g. [["src/app/core/", ["signal", "computed", "untracked"]]]. Signal primitives run without
+// the framework, so a folder may allow them and stay unit-testable. None: no framework-free layer.
+const stamp = join(root, '.harness.json');
+const PURE_DIRS = (existsSync(stamp) ? JSON.parse(readFileSync(stamp, 'utf8')).conventions?.pureDirs : undefined) ?? [];
 const ts = createRequire(join(root, 'package.json'))('typescript');
 const walk = (dir, out = []) => {
   if (!existsSync(dir)) return out;
