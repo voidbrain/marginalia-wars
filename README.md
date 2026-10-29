@@ -51,7 +51,7 @@ src/app/
 ├── store/game.store.ts  ← root signal() store for meta state (phase, picks, wins)
 ├── services/            ← InputService (keyboard), CpuService (AI brain emitting
 │                          plain InputStates) — thin adapters over the domain
-├── components/          ← OnPush presentational components, signal input() API only:
+├── components/          ← presentational components (OnPush by default), signal input() API only:
 │                          fighter, hud, move-banner (medieval scroll w/ Latin text), stage
 └── pages/               home → select → arena (rAF game loop) → result
 ```
@@ -70,7 +70,14 @@ npm test           # vitest unit tests (combat engine)
 npm run e2e        # Playwright (navigation + combat specs)
 npm run format     # prettier --write
 npm run deploy:local  # ngh push to gh-pages branch
+
+npm run check:freshness    # at session start: backlog behind main, merged branches, audit age
+npm run check:backlog      # backlog record layout
+npm run check:conventions  # Angular conventions, framework-free domain, unused exports
+npm run ci:status -- <PR>  # a PR's CI jobs and failed tests (needs gh)
 ```
+
+Pull requests run all of these in the `CI` workflow (`.github/workflows/ci.yml`).
 
 ## 🎨 Art direction & assets
 
@@ -78,9 +85,11 @@ See [docs/ART-DIRECTION.md](docs/ART-DIRECTION.md) and [docs/GAME-DESIGN.md](doc
 
 Characters/backgrounds are derived from public marginalia artwork references (Redbubble prints, gstatic thumbnails, medieval manuscript scans) processed into transparent sprite sheets (`public/assets/sprites`, `public/assets/backgrounds`) — sepia parchment palette, red/black two-ink rubric styling, gold-leaf banners. Original reference images are kept in `public/assets/references/` for provenance. Sprites are placeholders pending commissioned pixel art; swap files in `assets/sprites/` and everything updates automatically.
 
-## 🤖 AI agent guides
+## 🤖 Working on it
 
-Repo ships with tuned agents under `.claude/agents/` (gameplay-engineer, frontend-angular, artist-assets, e2e-qa) and Copilot instructions — they encode the architecture rules above so assistants don't leak Angular into the domain layer.
+- [AGENTS.md](AGENTS.md): how to work in this repository, for people and coding agents (Claude Code reads it through [CLAUDE.md](CLAUDE.md); Copilot through `.github/copilot-instructions.md`). Per-area rules are in [docs/agents/areas.md](docs/agents/areas.md), and each area has a subagent in `.claude/agents/` (gameplay-engineer, frontend-angular, artist-assets, e2e-qa).
+- [docs/BACKLOG.md](docs/BACKLOG.md): current bugs and features with their status and next action ([rules](docs/BACKLOG-RULES.md)); the newest file in [docs/audits/](docs/audits/) is the current audit.
+- [docs/STYLE-GUIDE.md](docs/STYLE-GUIDE.md): how the game looks and talks (tokens, fonts, voice, accessibility).
 
 ## 📜 Credits & disclaimer
 

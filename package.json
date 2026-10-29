@@ -12,7 +12,11 @@
     "format:check": "prettier --check \"src/**/*.{ts,scss,html}\" \"e2e/**/*.ts\"",
     "e2e": "playwright test",
     "e2e:report": "playwright show-report",
-    "deploy:local": "ngh --dir=dist/marginalia-fighters/browser"
+    "deploy:local": "ngh --dir=dist/marginalia-fighters/browser",
+    "check:backlog": "node tools/check-backlog.mjs",
+    "check:freshness": "node tools/check-freshness.mjs",
+    "ci:status": "node tools/ci-status.mjs",
+    "check:conventions": "node tools/check-conventions.mjs"
   },
   "private": true,
   "packageManager": "npm@10.9.8",

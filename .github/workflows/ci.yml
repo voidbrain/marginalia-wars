@@ -1,0 +1,82 @@
+name: CI
+
+# Every pull request: the harness checks, lint, unit tests, type check, build; then the browser tests.
+# tools/ci-status.mjs reads this workflow by its name (CI); keep it.
+on:
+  pull_request:
+    branches: [main]
+  workflow_call:
+    inputs:
+      e2e:
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # check:freshness compares the backlog's commit with main and lists merged branches
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Backlog records and layout
+        run: npm run check:backlog
+
+      - name: Backlog freshness (warnings only, never blocks)
+        run: npm run check:freshness -- --github
+
+      - name: AGENTS conventions and unused exports
+        # Pre-harness code still has problems (B-003 in docs/BACKLOG.md): shown, not blocking. Remove when B-003 closes.
+        continue-on-error: true
+        run: npm run check:conventions
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npx ng test --watch=false
+
+      - name: Type check
+        run: npx tsc -p tsconfig.app.json --noEmit --noUnusedLocals --noUnusedParameters
+
+      - name: Build
+        run: npm run build
+
+  e2e:
+    # e2e/: navigation and combat; playwright.config.ts starts ng serve on port 4300
+    if: ${{ github.event_name == 'pull_request' || inputs.e2e == true }}
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install the browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Browser tests
+        run: npx playwright test --workers=1
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
