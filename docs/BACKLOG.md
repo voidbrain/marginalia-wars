@@ -1,6 +1,6 @@
 # Marginalia Fighters backlog
 
-Current work ledger, reviewed 29 October 2026 against main `8f3a132d` (merged #8; its CI read with `ci:status`). Records opened on that date come from the [baseline audit](audits/2026-10-29.md) made when the agent harness was added. Closed items and their PR history are in [the archive](archive/backlog-2026-10-29.md). IDs are stable: do not reuse them.
+Current work ledger, reviewed 29 October 2026 against main `84164c4c` (merged #9; its CI read with `ci:status`). Records opened on that date come from the [baseline audit](audits/2026-10-29.md) made when the agent harness was added. Closed items and their PR history are in [the archive](archive/backlog-2026-10-29.md). IDs are stable: do not reuse them.
 
 ## How to use this file
 
@@ -109,30 +109,6 @@ Each item has a compact summary, followed by its human-action line (icon first: 
 | PR / evidence | — |
 | Opened | 2026-10-29 |
 | Verification | Pending |
-| Reviewed | 2026-10-29 |
-
-</details>
-
----
-
-### B-005
-
-| Signal | ID | Priority | Status | Item |
-|:---:|---|---|---|---|
-| 🟢 | B-005 | 🔶 P2 | Verified | GAME-DESIGN tables disagree with the move tables |
-
-💻 **→ Human action required: No**<br />Close and archive once the documentation PR merges.
-
-**Next action / closure evidence:** Resolved by making the code the only source of numbers: docs/GAME-DESIGN.md now describes the rules and names where each number lives (`moves.ts`, `PROJECTILES`, the engine, the arena) and holds no frame data, so it cannot drift again. Its systems section was corrected against the code (blocked hits deal `ceil(damage × 0.15)`, specials and mercies are unblockable, meter +8 / +4 / +2, one round per fight, meter resets each fight). The README roster used Latin names that are not in the game (Cooperus, *Cuniculus Furibundus* …); it now shows the code's names. If the Latin names were the intent, that is a code change to `characters.data.ts` and `moves.ts`. Next: close and archive after the PR merges.
-
-<details>
-<summary>PR history, dates and verification</summary>
-
-| Field | Value |
-|---|---|
-| PR / evidence | [#9](https://github.com/voidbrain/marginalia-wars/pull/9) |
-| Opened | 2026-10-29 |
-| Verification | Documentation: every rule in GAME-DESIGN checked against `combat-engine.ts`, `moves.ts`, `character.types.ts`, `arena.ts`, `game.store.ts`, `cpu.service.ts` and the specs, 2026-10-29 |
 | Reviewed | 2026-10-29 |
 
 </details>
@@ -333,24 +309,24 @@ Each item has a compact summary, followed by its human-action line (icon first: 
 
 ---
 
-### F-007
+### F-008
 
 | Signal | ID | Priority | Status | Item |
 |:---:|---|---|---|---|
-| 🟡 | F-007 | 🔹 P3 | Implemented | Docs consolidated; harness reconciled to template 1.1.0 |
+| 🟡 | F-008 | 🔹 P3 | Implemented | Harness reconciled to template 1.2.0 |
 
-💻 **→ Human action required: No**<br />Open the PR and close this record when its `check` job passes.
+💻 **→ Human action required: No**<br />Close this record when its PR merges with a green `check` job.
 
-**Next action / closure evidence:** docs/ART-DIRECTION.md merged into docs/STYLE-GUIDE.md (concept, do and don't, fighters, stages; the former palette and fonts kept in B-007) and deleted; docs/DEPLOYMENT.md merged into the README ("Deploying to GitHub Pages") and deleted; docs/GAME-DESIGN.md rewritten as rules plus sources (B-005); README roster and round claims corrected (F-006); all links repointed. Harness: `.harness.json` stamp added and the project reconciled from template v1.0.0 to v1.1.1 with `check-harness` (copied `check-freshness`, `ci-status`; `check-conventions` conflict resolved by moving its folders into `.harness.json`; AGENTS and BACKLOG-RULES carry the new session-start step). Closes when the PR merges with a green `check` job.
+**Next action / closure evidence:** `check:freshness` listed template v1.2.0 at session start: `tools/check-harness.mjs` copied from the template (online-first warnings: unreachable, behind, ahead, dirty or missing template clone) and the AGENTS Work-tracking bullet reconciled from `core/AGENTS.md` (pull the template first); `.harness.json` moved to 1.2.0. The same PR reconciles the backlog with #9 (B-005 and F-007 closed and archived). Closes when the PR merges with a green `check` job.
 
 <details>
 <summary>PR history, dates and verification</summary>
 
 | Field | Value |
 |---|---|
-| PR / evidence | [#9](https://github.com/voidbrain/marginalia-wars/pull/9) |
+| PR / evidence | — |
 | Opened | 2026-10-29 |
-| Verification | Documentation: `check:backlog`, `check:freshness` (harness on v1.1.1), `check:conventions` (same 11 as B-003), lint, local links, 2026-10-29. CI: Pending |
+| Verification | Script: `check:freshness` (harness on v1.2.0), `check:backlog`, 2026-10-29. CI: Pending |
 | Reviewed | 2026-10-29 |
 
 </details>
